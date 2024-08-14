@@ -1,6 +1,6 @@
 <br>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/2204c2cc-5a0b-4b6c-970d-624d8c2b01f8" alt="mainLogo"/>
+  <img src="https://github.com/user-attachments/assets/2f1e846f-de45-41e0-879b-191b812213e1" alt="mainLogo"/>
 </p>
 <br>
 
@@ -9,7 +9,7 @@
 
 ## 프로젝트 목적
 
-코로나 시대3년여간 문화생활 환경이 바뀌면서 영화관람 중심이었던 활동 영역도 다양해졌다.
+코로나 시대 3년여간 문화생활 환경이 바뀌면서 영화관람 중심이었던 활동 영역도 다양해졌다.
 
 바뀐 문화생활을 보면 공연 전시 비중이 56.2%로 여러 장르 가운데 가장 높았다.
 
