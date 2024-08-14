@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}"><head>
+<meta charset="UTF-8">
+<title>update</title>
+<link rel="stylesheet" href="/css/gallery/update.css">
+
+</head>
+<body>
+<div layout:fragment="content">
+<div id="banner">
+ 	<img src="/image/gallery/gallery.png" alt="배너 이미지">
+</div>
+<form action="/gallery/update" method="post" name="updateForm">
+  <input type="hidden" name="galId" th:value="${galleryUpdate.galId}">
+  제목: <input type="text" name="galTitle" th:value="${galleryUpdate.galTitle}"> <br>
+  기간: <input type="text" name="galPeriod" th:value="${galleryUpdate.galPeriod}"> <br>
+  장소: <input type="text" name="galLocation" th:value="${galleryUpdate.galLocation}"> <br>
+  주소: <input type="text" name="galAddress" th:value="${galleryUpdate.galAddress}"> <br>
+  장르: <input type="text" name="galGenre" th:value="${galleryUpdate.galGenre}"> <br>
+  내용: <textarea name="galInfo" cols="30" rows="10" th:text="${galleryUpdate.galInfo}"></textarea> <br>  
+  <input type="hidden" name="boardHits" th:value="${galleryUpdate.galHits}">
+  <input type="button" value="글수정" onclick="galleryUpdate()">
+</form>
+<script th:inline="javascript">
+const galleryUpdate= () => { 
+	document.updateForm.submit();
+}
+</script>
+</div>
+</body>
+</html>

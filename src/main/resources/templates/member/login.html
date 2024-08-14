@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ExhibitScape login</title>
+    <link rel="stylesheet" type="text/css"
+	th:href="@{/css/member/loginCss.css}">
+</head>
+<body>
+    <div class="login-container">
+        <a href="/" class="logo-link">
+            <div class="logo">
+                <img src="./image/member/loginlogo.png" alt="ExhibitScape Logo">
+            </div>
+        </a>
+        <form action="/loginProc" method="post" name="loginForm">
+            <div class="input-group">
+                <input id="memberId" type="text" name="memberId" placeholder="id" />
+            </div>
+            <div class="input-group">
+                <input id="password" type="password" name="password" placeholder="password" />
+            </div>
+            <input type="submit" value="Login" />
+        </form>
+        <div class="additional-links">
+           
+            <a href="/join">Sign Up</a>
+        </div>
+    </div>
+
+</body>
+</html>
+

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>관리자 글 수정 폼</h1>
+<form action:"/scheduleBoard/update" method="post">
+	<input type="hidden" name="no" value="[${no}]">
+	제목 : <input type="text" name="title" id="title"><br/>
+	담당자 : <input type="text" name="master" id="master"><br/>
+	담당자 TEL : <input type="text" name="master_TEL" id="master_TEL"><br/>
+	담당자 E MAIL : <input type="text" name="master_EMAIL" id="master_EMAIL"><br/>
+	행사내용 : <input type="text" name="content"id="content"><br/>
+	행사입장료 : <input type="text" name="price"id="price"><br/>
+	행상시작일 : <input type="date" name="start_date" id="start_date"><br/>
+	행상종료일 : <input type="date" name="end_date" id="end_date"><br/>
+	행사장소 : <input type="text" name="place"id="place"><br/>
+	주최자 : <input type="text" name="organizers"id="organizers"><br/>
+	이미지주소 : <input type="text" name="imgOFile"id="imgOFile"><br/>
+	
+	<input type="submit" value="수정">
+	<input type="button" value="글목록" onclick="location.href='/scheduleBoard/list';"/>
+	
+</body>
+</html>

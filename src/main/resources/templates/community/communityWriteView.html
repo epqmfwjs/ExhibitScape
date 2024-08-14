@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>전시상황</title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/community/comWritecss.css}">
+</head>
+<body>
+<div layout:fragment="content">
+		<form action="/exhibitscape/community/communityWrite" method="post" enctype="multipart/form-data">
+			<div class="category-image"></div>
+	<div class="write-form" >
+			<div class="form-group">
+				<label for="comCategory">카테고리</label> 
+				<select id="comCategory" name="comCategory" required>
+					<option value="">카테고리 선택</option>
+					<option value="전시 소식">전시 소식</option>
+					<option value="전시장 주변 정보">전시장 주변 정보</option>
+					<option value="전시 질문">전시 질문</option>
+					<option value="기타">기타</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="comTitle">글제목</label> 
+				<input type="text" id="comTitle" name="comTitle" required>
+			</div>
+			<div class="form-group">
+				<label for="comContent">글내용</label>
+				<textarea id="comContent" name="comContent" rows="20" required></textarea>
+			</div>
+			<div class="file-group">
+			<div><img class="preview" id="preview"/></div>
+			<input type="file" name="comFile" multiple="multiple" accept="image/*" onchange="readURL(this)"/>
+			</div>
+			<div class="button-group">
+				<div class="submit-group">
+					<input type="submit" value="등록">
+				</div>
+				<div class="submit-group">
+					<input type="reset" value="취소">
+				</div>
+			</div>
+	</div>
+		</form>
+<script>
+function readURL(input){
+	if(input.files && input.files[0]){
+		var reader = new FileReader();
+		reader.onload= function(e){
+			document.getElementById('preview').src=e.target.result;
+		};
+		reader.readAsDataURL(input.files[0]);
+	}else{
+		document.getElementById('preview').src="";
+	}
+}
+</script>		
+</div>
+</body>
+</html>

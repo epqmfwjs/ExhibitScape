@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ExhibitScape main</title>
+</head>
+<body>
+main Page
+
+<hr>
+ [[${username}]]
+ [[${memberId}]]
+[[${role}]] 
+[[${nickname}]] 
+ <form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+
+ <form action="/myPage" method="get">
+    <button type="submit">myPage</button>
+ 
+    
+ 
+</form>
+</body>
+</html>

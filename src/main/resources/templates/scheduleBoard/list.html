@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+		<link rel="stylesheet" href="/css/scheduleBoard/list.css">
+        <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
+		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
+		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
+		<script class="cssdesk" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="banner">
+        <img src="/image/scheduleBoard/exhibitscape.png" alt="배너 이미지">
+    </div>
+    
+    <div id="view2" class="content" style="display: block;">
+        <div class="toggle"><h2>List Mode<button id="toggleButton2">Calendar Mode</button></h2></div>
+        
+        
+        <div class="container">
+			<div class="sidebar">
+	            <form action="/scheduleBoard/search" class="keywordSearch" name="searchForm" id="searchForm">
+		            <p><h3>Search Bar</h3></p>
+		            <input type="text" name="listKeyword" id="listKeyword" placeholder="검색..." class="search-bar">
+		            <input type="button" value="검색" id="listSearchButtonKeyword">
+		        </form>
+			    <br/><br/>
+			    <form action="/scheduleBoard/searchDate" class="dateSearch" name="searchFormDate" id="searchFormDate">
+					<input type="date" name="listStart_date" id="listStart_date">
+					<input type="date" name="listEnd_date" id="listEnd_date">
+					<input type="button" value="검색" id="listSearchButtonDate">
+				</form>
+			    <br/><br/>
+			    <div class="popular_list">
+				    <h2>인기 검색어</h2>
+				    <ul>
+				        <li th:each="keyword, stat : ${popularKeywords}">
+				            <span th:text="${stat.count}">1</span>.&nbsp&nbsp&nbsp<a th:href="@{/scheduleBoard/search(listKeyword=${keyword})}" th:text="${keyword}" style="text-decoration: none; color: white;"></a>
+				        </li>
+				    </ul>
+			    </div>
+		          <!--  <input type="button" value="글쓰기(관리자)" onclick="location.href='/scheduleBoard/insert';"/> -->
+    		</div>
+            <!-- msg 에 무언가 들었다면 표시 -->
+            <div th:if="${msg}" class="search-result-message">
+			    <img th:src="${msg}" alt="배너 이미지">
+			</div>
+            <div class="event-schedule">
+                <!-- 검색 결과가 있다면 반복해서 표시 -->
+                <div th:each="DB : ${DBlist}">
+                    <div class="event-card">
+                        <div class="card-content">
+                            <h3><a th:href="@{/scheduleBoard/detail/{no}(no=${DB.no})}" th:text="${DB.title}">DB 제목</a></h3>
+                            <p class="location" th:text="${DB.organizers}">서울</p>
+                            <p class="location" th:text="'행사일정  ' + ${DB.start_date} + ' ~ ' + ${DB.end_date}">일정</p>
+                            <p class="location" th:text="'Comments  ' + ${DB.commentCount}">댓글 수</p>
+                        </div>
+                        <div class="card-image">
+                            <a th:href="@{/scheduleBoard/detail/{no}(no=${DB.no})}">
+                                <img th:src="@{${DB.imgOFile}}" onerror="this.onerror=null;this.src='/image/scheduleBoard/default_IMG.jpg'" alt="Image"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+				<div class="page">
+				    <ul>
+				        <!-- 이전 페이지 링크: 현재 페이지가 0보다 클 경우에만 표시 -->
+				        <li th:if="${currentPage > 0}">
+				            <a th:href="@{/scheduleBoard/list(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
+				        </li>
+				        <!-- 페이지 번호: 현재 페이지를 기준으로 이전 페이지 현재 페이지 다음 페이지를 표시 -->
+				        <li th:each="page : ${#numbers.sequence(
+				            currentPage > 0 ? currentPage - 1 : 0,
+				            currentPage + 1 < totalPage ? currentPage + 1 : totalPage - 1)}">
+				            <a th:href="@{/scheduleBoard/list(page=${page}, size=${size})}"
+				               th:text="${page + 1}" th:classappend="${page == currentPage} ? 'active'">
+				               <!-- 페이지 번호(+1)를 표시 및 현재 페이지일 경우 active 클래스를 추가-->
+				            </a>
+				        </li>
+				        <!-- 다음 페이지 링크: 현재 페이지가 총 페이지 수보다 작을 경우에만 표시 -->
+				        <li th:if="${currentPage + 1 < totalPage}">
+				            <a th:href="@{/scheduleBoard/list(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
+				        </li>
+				    </ul>
+				</div>
+            </div>
+        </div>
+    </div>
+    <div id="view1" class="content">
+        <div class="toggle"><h2>Calendar Mode<button id="toggleButton1">List Mode</button></h2></div>
+        			<div class="sidebar">
+	            <div class="keywordSearch">
+					<p><h3>Search Bar</h3></p>
+			        <label for="calendarKeyword"></label>
+			        <input type="text" id="calendarKeyword" placeholder="검색..." class="search-bar">
+			        <input type="button" value="검색" id="calendarSearchButtonKeyword">
+			    </div>
+			    <br/>
+			    <div class="dateSearch">
+			        <label for="calendarStart_date"></label>
+			        <input type="date" id="calendarStart_date">
+			        <label for="calendarEnd_date"></label>
+			        <input type="date" id="calendarEnd_date">
+			        <input type="button" value="검색" id="calendarSearchButtonDate">
+			    </div>
+			    <br/><br/>
+					<div class="popular">
+					    <h2>인기 검색어</h2>
+					    <ul>
+					        <li th:each="keyword, stat : ${popularKeywords}">
+					            <span th:text="${stat.count}">1</span>.&nbsp&nbsp&nbsp<a th:href="@{/calendar/calendarSearch(calendarKeyword=${keyword})}" th:text="${keyword}" style="text-decoration: none; color: white;"></a>
+					        </li>
+					    </ul>
+					</div>
+
+		           <!-- <input type="button" value="글쓰기(관리자)" onclick="location.href='/scheduleBoard/insert';"/> -->
+    		</div>
+        <div id="calendarBox">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/scheduleBoard/comment.js"></script>
+</div>
+</body>
+</html>

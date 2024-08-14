@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>전시상황</title>
+<style>
+body{
+	background-color: #f5f5f5;
+}
+#banner {
+    width: 100%;
+    text-align: center;
+    margin-top: 60px; /* 헤더의 높이만큼 여백 추가 */
+}
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+.container {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    height: 600px; /* 세로 크기 늘리기 */
+}
+
+.left-area {
+    display: grid;
+    grid-template-rows: 1fr auto; /* 상단 영역은 남은 공간을 모두 차지하고, 하단 영역은 자동 높이로 설정 */
+    gap: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgb(128, 128, 128);
+    height: 95%; /* 왼쪽 영역 높이를 95%로 설정 */
+    margin-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box; /* 패딩과 테두리를 높이 계산에 포함 */
+}
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* 예시로 200px에서 50px로 변경하여 인풋 영역의 세로 길이를 줄임 */
+}
+
+.input-area input[type="text"] {
+    flex-grow: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    background-color: rgb(19, 216, 3);
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.input-area button:hover {
+    background-color: rgb(0, 255, 0);
+}
+
+.leave {
+    background-color: #dc3545;
+    padding: 10px 20px;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%; /* 부모 컨테이너의 100% */
+    max-width: 300px; /* 최대 가로 길이 */
+    min-width: 150px; /* 최소 가로 길이 */
+}
+
+.leave:hover {
+    background-color: #c82333;
+}
+
+.right-area {
+    display: grid;
+    grid-template-rows: 1fr auto; /* 상단 영역은 남은 공간을 모두 차지하고, 하단 영역은 자동 높이로 설정 */
+    gap: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgb(128, 128, 128);
+    height: 95%; /* 왼쪽 영역 높이를 95%로 설정 */
+    margin-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box; /* 패딩과 테두리를 높이 계산에 포함 */
+}
+.chat-area {
+  flex-grow: 1;
+  
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* 채팅 영역에 스크롤바 생성 */
+}
+
+.message {
+  position: relative;
+  display: inline-block;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  max-width: 70%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.message-sent {
+  align-self: flex-end; /* 보낸 메시지를 오른쪽에 정렬 */
+  color: #333;
+  text-align: right;
+  background-color: #fee79d;
+  margin-right: 15px;
+  border-top-right-radius: 0;
+}
+
+.message-received {
+  align-self: flex-start; /* 받은 메시지를 왼쪽에 정렬 */
+  color: #333;
+  text-align: left;
+  background-color: #b2e9d1;
+  margin-left: 15px;
+  border-top-left-radius: 0;
+}
+
+.message-sent:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid #fee79d;
+  border-left: 0px solid transparent;
+}
+
+.message-received:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid #b2e9d1;
+  border-right: 0px solid transparent;
+}
+
+.title {
+	text-align: center;
+	margin-top: -10px;
+  }
+  
+#participants {
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 600px;
+    margin: auto;
+    
+}
+
+.participant {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: rgb(129, 254, 217);
+    color: rgb(0, 0, 0);
+    border-radius: 9px;
+    font-size: 14px;
+    white-space: nowrap;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin:auto;
+}
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="banner">
+        <img src="/image/chat/chatRooms.png" alt="배너 이미지">
+    </div>
+    <input type="hidden" id="sender" th:value="${user}" />
+<div class="container">
+    <div class="left-area" id = "leftarea">
+	<h3 th:text="${roomName}" class="title"></h3>
+		<div class="chat-area">
+		    <div id="chat-container"></div>
+		</div>
+        <div class="input-area">
+            <input type="text" id="message" placeholder="Message">
+            <button id="send">전송</button>
+        </div>
+    </div>
+    <div class="right-area">
+		<div class="participants-area">
+			<h3><strong>채팅방 참여자</strong></h3>
+        	 	<div id="participants"></div>
+        </div>
+        <div class="out-area">
+       		<button id="leave" class="leave">나가기</button>
+		</div>    
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('roomId'); // URL의 roomId 파라미터 값
+    const sender = document.getElementById('sender').value; // 입력된 사용자 이름을 가져옴
+    const chatRoomNo = roomId;
+    console.log("sender 값이야 "+sender)
+    loadAndShowParticipants();
+    if (!roomId || !sender) {
+        console.error("roomId 하고 sender 가 같은 곳 을 안봐.");
+        return;
+    }
+	//로컬스토리지 에서 대화내용 가져오게하는 함수 호출
+	loadMessagesFromLocal(roomId);
+	
+    function loadAndShowParticipants() {
+        fetch(`/chat/participants?roomId=${roomId}`)
+            .then(response => response.json())
+            .then(participants => {
+                console.log("데이터 타입확인해보자 " + typeof participants); // 데이터 타입 확인
+                console.log("배열인지 왁인해보자" + Array.isArray(participants)); // participants가 배열인지 확인
+                if (participants == null) {
+                    console.log("updateParticipantsList null 이니?");
+                }
+                if (!Array.isArray(participants)) {
+                    console.error("Participants가 배열형태로 넘어오지않음:", participants);
+                    participants = [];
+                }
+                console.log("updateParticipantsList 반환은 하는구나");
+                updateParticipantsList(participants);
+            })
+            .catch(error => console.error("불러오기실패한듯....:", error));
+    }
+
+    function updateParticipantsList(participants) {
+        console.log("받아온 participants 데이터: ", participants);
+        const participantsList = document.getElementById('participants');
+        participantsList.innerHTML = ''; // 기존 목록을 비움
+
+        for (const participant of participants) {
+            console.log("updateParticipantsList 여긴들어오니?1");
+            const div = document.createElement('div');
+            div.textContent = participant; // 참여자 이름 설정
+            div.className = 'participant'; // CSS 클래스 추가
+            participantsList.appendChild(div);
+        }
+    }
+
+            // WebSocket 연결 설정
+            var socket = new SockJS(`http://localhost:8085/ws/chat?roomId=${roomId}`);
+            //var socket = new SockJS(`http://172.30.1.69:8085/ws/chat?roomId=${roomId}`);
+            var stompClient = Stomp.over(socket);
+
+            stompClient.connect({roomId: roomId}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe(`/topic/room/${roomId}`, function (message) {
+                    showMessage(JSON.parse(message.body));
+                });
+			
+			
+            // 채팅방 입장 메시지 보내기
+            stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({messageNo: chatRoomNo, sender: sender, content: '님이 채팅방에 입장하셨습니다.'}));
+            });
+
+            document.querySelector('#leave').addEventListener('click', function () {
+                leaveChat(stompClient);
+            });
+            
+            document.querySelector('#send').addEventListener('click', function () {
+                sendMessage(stompClient, chatRoomNo, sender);
+            });
+            
+    // 메시지 전송 함수 수정
+    function sendMessage(stompClient, chatRoomNo, sender) {
+        var content = document.getElementById('message').value; // 입력된 메시지 내용을 가져옴
+
+        if (!content) {
+            console.error("전송할 내용 없음");
+            return;
+        }
+
+		
+		
+		// HTML 태그 제거
+    	content = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		
+        var message = JSON.stringify({messageNo: chatRoomNo, sender: sender, content: content});
+		
+		 // 메시지 로컬 스토리지에 저장
+  		saveMessageToLocal(chatRoomNo, sender, content);
+        
+        stompClient.send('/app/chat.sendMessage', {}, message);
+
+        // 입력창 초기화
+        document.getElementById('message').value = '';
+	    }
+		
+		// 메시지를 로컬 스토리지에 저장하는 함수
+		function saveMessageToLocal(roomId, sender, message) {
+		  const existingMessages = JSON.parse(localStorage.getItem(`chat_${roomId}`)) || [];
+		  existingMessages.push({ sender, message });
+		  localStorage.setItem(`chat_${roomId}`, JSON.stringify(existingMessages));
+		}
+		
+	    // 'send' 버튼 클릭 이벤트 핸들러 수정
+	    document.querySelector('#send').addEventListener('click', function () {
+	        sendMessage(stompClient, chatRoomNo, sender);
+	    });
+
+	    // 엔터키 누르면 메시지 전송
+	    document.getElementById('message').addEventListener('keyup', function(event) {
+	        if (event.key === 'Enter') {
+	            sendMessage(stompClient, chatRoomNo, sender);
+	        }
+	    });
+
+	function showMessage(message) {
+	    var messageElement = document.createElement('div');
+	    
+	    // 현재 시간을 '시:분 AM/PM' 형식으로 포맷팅
+	    var now = new Date();
+	    var hours = now.getHours();
+	    var minutes = now.getMinutes();
+	    var ampm = hours >= 12 ? '오후' : '오전';
+	    hours = hours % 12;
+	    hours = hours ? hours : 12; // 0시는 12시로 변환
+	    minutes = minutes < 10 ? '0'+minutes : minutes;
+	    var strTime = ampm + ' ' + hours + ':' + minutes;
+	    
+	    // 메시지 내용에 시간 추가background-color: rgb(255, 255, 255);
+	    messageElement.innerHTML = '<strong>'+message.sender+'<strong>'+'<br/>' + '<span style="font-size: 1.2em;">'+ message.content +'</span>'+ ' <span style="font-size: 0.5em;">' + strTime + '</span>';
+	    messageElement.classList.add('message'); // 공통 클래스 추가
+	
+	    if (message.sender === sender) {
+	        messageElement.classList.add('message-sent');
+	    } else {
+	        messageElement.classList.add('message-received');
+	    }
+	
+	    var chatContainer = document.getElementById('chat-container');
+	    var scrollCahttingMap = document.getElementById('leftarea')
+	    //chatContainer.scrollTop = chatContainer.scrollHeight;
+	    chatContainer.appendChild(messageElement); // 메시지를 컨테이너에 추가
+	    loadAndShowParticipants();
+	    // 스크롤을 최신 메시지 위치로 이동
+		scrollCahttingMap.scrollTop = chatContainer.scrollHeight;
+	
+	}
+	function leaveChat(stompClient) {
+	    if (stompClient && stompClient.connected) {
+	        stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify({
+	            roomId: roomId,
+	            messageNo: chatRoomNo,
+	            sender: sender,
+	            content: '님이 채팅방에서 나가셨습니다.'
+	        }));
+	
+	        stompClient.disconnect(function () {
+	            console.log("커넥션 컷.");
+	            loadDeleteParticipants();
+	            window.location.href = '/chatList';
+	            
+	        });
+	    }
+	}
+    function loadDeleteParticipants() {
+    // 여기서 ChatRestController로 요청을 ㄱㄱ
+    fetch('/chat/deleteParticipants', {
+        method: 'POST', // 요청 메소드
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            roomId: roomId,
+            sender: sender
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+			
+            throw new Error('네트워크 응답이 올바르지 않습니다.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('참가자 삭제 요청 성공:', data);
+        
+    })
+    .catch(error => {
+        console.error('참가자 삭제 요청 실패:', error);
+    });
+    
+}
+	function loadMessagesFromLocal(roomId) {
+	  const messages = JSON.parse(localStorage.getItem(`chat_${roomId}`)) || [];
+	  const messageContainer = document.getElementById('chat-container'); // 메시지를 표시할 컨테이너의 ID를 'messageContainer'라고 가정
+	  messages.forEach(msg => {
+	    const messageElement = document.createElement('div');
+	    messageElement.innerHTML = `<strong>${msg.sender}</strong>: ${msg.message}`;
+	    messageContainer.appendChild(messageElement);
+	  });
+    
+};
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</body>
+</html>

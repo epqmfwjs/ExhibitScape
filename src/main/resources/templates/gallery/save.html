@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>save</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="/css/gallery/save.css">
+</head>
+<body>
+<div layout:fragment="content">
+<div id="banner">
+ 	<img src="/image/gallery/gallery.png" alt="배너 이미지">
+</div>
+    <form action="/gallery/save" method="post" enctype="multipart/form-data">
+        <label for="galTitle">제목:</label> 
+        <input type="text" id="galTitle" name="galTitle" required><br/>
+        <label for="galLocation">장소:</label> 
+        <select id="galLocation" name="galLocation" required>
+            <option value="">선택하세요</option>
+            <option value="서울">서울</option>
+            <option value="경기">경기</option>
+            <option value="강원">강원</option>
+            <option value="충청">충청</option>
+            <option value="전라">전라</option>
+            <option value="경상">경상</option>
+            <option value="제주">제주</option>
+        </select><br> 
+
+        <label for="galAddress">주소:</label> 
+        <input type="text" id="galAddress" name="galAddress" required/><br/> 
+
+        <label for="galGenre">장르:</label> 
+        <input type="text" id="galGenre" name="galGenre" required/><br/> 
+
+        <label for="galInfo">내용:</label>
+        <textarea id="galInfo" name="galInfo" required></textarea><br/> 
+
+        <label for="galleryFile">파일:</label> 
+        <input type="file" id="galleryFile" name="galleryFile" multiple/><br/> 
+
+		<label for="galPeriod">기간: </label>
+		<input type="text" name="galPeriod" value="05/01/2024 - 05/30/2024" /><br/>
+
+        <input type="submit" value="작성"/>
+    </form>
+    
+	<script>
+	$(function() {
+	  $('input[name="galPeriod"]').daterangepicker({
+	    opens: 'left'
+	  }, function(start, end, label) {
+	    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+	  });
+	});
+	</script>
+</div>
+</body>
+</html>

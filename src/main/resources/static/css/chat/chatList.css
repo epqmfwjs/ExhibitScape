@@ -1,0 +1,251 @@
+body {
+	font-family: Arial, sans-serif; /* 폰트 설정 */
+	margin: 0;
+	padding: 0;
+	/*background-color: #f4f4f4;  배경색 설정 */
+	background-color: rgb(255, 255, 255);  /*배경색 설정 */
+	/*background-color: rgb(255, 255, 255); 배경색 설정 */
+}
+.container {
+	display: grid;
+    padding: 20px; /* 패딩 설정 */
+    margin-left: 250px; /* 사이드바 너비만큼 마진 설정 */
+    padding: 40px; /* 컨테이너의 내부 여백 */
+}
+
+form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 50%; /* 부모 요소의 50% 너비 */
+    margin: 0 auto; /* 수평 가운데 정렬 */
+}
+
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+.sidebar {
+    position: absolute;
+    top: 360px; /* 상단에 위치 */
+    left: 0; /* 좌측에 위치 */
+    width: 245px; /* 사이드바 폭 */
+    height: 110%; /* 전체 높이 */
+    background-color: #333; /* 배경색 설정 */
+    color: white; /* 글자색 설정 */
+    padding: 20px; /* 패딩 설정 */
+    box-sizing: border-box; /* 패딩 포함한 박스 크기 설정 */
+}
+.keywordSearch {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* 각 요소 간의 간격 설정 */
+}
+
+.keywordSearch h3 {
+    margin: 0; /* 기본 마진 제거 */
+    border-bottom: 1px solid #555; /* 하단 경계선 설정 */
+    
+}
+
+.keywordSearch .search-bar {
+    width: 100%; /* 전체 너비 */
+    padding: 10px; /* 패딩 설정 */
+    margin-bottom: 10px; /* 하단 마진 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 테두리 둥글게 */
+    box-sizing: border-box; /* 패딩 포함한 박스 크기 설정 */
+    background-color: rgb(255, 255, 255); /* 배경색 설정 */
+    color: rgb(0, 0, 0); /* 글자색 설정 */
+}
+
+.keywordSearch input[type="button"] {
+    width: 80%; /* 전체 너비 */
+    padding: 10px; /* 패딩 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 테두리 둥글게 */
+    background-color: #4CAF50; /* 기본 배경색 */
+    color: white; /* 버튼 글자색 설정 */
+    cursor: pointer; /* 커서 모양 변경 */
+    margin-left: 18px; /* 마진 설정 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+.keywordSearch input[type="button"]:hover {
+    background-color: #45a049; /* 호버 시 배경색 변경 */
+}
+.popular {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로로 배치 */
+    justify-content: center; /* 주 축(여기서는 세로 축) 기준 중앙 정렬 */
+    height: 30%; /* 부모 요소의 전체 높이 사용 */
+}
+.popular h2 {
+    margin-bottom: 20px; /* 제목과 목록 사이의 마진 설정 */
+}
+.popular ul {
+    list-style: none; /* 기본 목록 스타일 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+}
+.popular li {
+    margin-bottom: 10px; /* 목록 항목 간의 마진 설정 */
+}
+.popular a {
+    color: white; /* 링크 색상 설정 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+.popular_list {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로로 배치 */
+    justify-content: center; /* 주 축(여기서는 세로 축) 기준 중앙 정렬 */
+    height: 30%; /* 부모 요소의 전체 높이 사용 */
+}
+.popular_list h2 {
+    margin-bottom: 20px; /* 제목과 목록 사이의 마진 설정 */
+}
+.popular_list ul {
+    list-style: none; /* 기본 목록 스타일 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+}
+.popular_list li {
+    margin-bottom: 10px; /* 목록 항목 간의 마진 설정 */
+}
+.popular_list a {
+    color: white; /* 링크 색상 설정 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+/* 이벤트 카드를 그리드로 배치 */
+.event-schedule {
+    display: grid; /* 그리드 레이아웃 사용 */
+    grid-template-columns: repeat(4, 1fr); /* 4개의 열 설정 */
+    grid-gap: 20px; /* 그리드 사이 간격 */
+    
+}
+.event-schedule img {
+    width: 350px; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+    margin: 0px 410px; /* 마진 */
+    margin-bottom: 290px;
+}
+
+/* 이벤트 카드 스타일 */
+.event-card {
+    background-color: rgb(255, 255, 255, 0.3); /* 배경색을 약간 불투명하게 설정 */
+    margin-bottom: 20px; /* 마진 설정 */
+    padding: 20px; /* 패딩 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+    aspect-ratio: 8 / 1; /* 정사각형 비율 유지 */
+    position: relative; /* 상대 위치 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* 호버 시 변형 및 투명도 전환 효과 */
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: space-between; /* 상하 여백 균등 */
+    opacity: 1; /* 기본 투명도 설정 */
+}
+
+.event-card:hover {
+    transform: translateY(-5px); /* 호버 시 약간 위로 올라가는 효과 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 */
+    opacity: 0.9; /* 호버 시 투명도 설정 */
+    background-color: #45a049; /* 호버 시 배경색 변경 */
+}
+
+/* 이벤트 제목 스타일 */
+.event-card h3 {
+    margin-top: 0; /* 위쪽 마진 제거 */
+    font-size: 1.2rem; /* 제목 폰트 크기 */
+    font-weight: bold; /* 제목 굵게 */
+}
+.event-card a {
+	text-decoration: none;
+	color: black; /* 기본 링크 색상 */
+}
+
+img {
+    width: 100%; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+}
+
+
+/* 마우스 호버 시 스타일 */
+input[type="button"]:hover {
+  background-color: #45a049; /* 호버 시 배경색 변경 */
+  transform: translateX(10px); /* 옆으로 이동하는 효과 */
+}
+#banner {
+    width: 100%;
+    text-align: center;
+    margin-top: 60px; /* 헤더의 높이만큼 여백 추가 */
+}
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+/*여기까지 캘린더*/
+.search-result-message{
+	background-color: rgb(255, 255, 255,0.3); /* 배경색을 약간 불투명하게 설정 */
+    margin-bottom: 50px; /* 마진 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    border-radius: 10px; /* 모서리 둥글게 */
+}
+
+.popular_list h2 {
+	border-bottom: 1px solid #444; /* 하단 테두리 */
+}
+.popular h2 {
+	border-bottom: 1px solid #444; /* 하단 테두리 */
+}
+
+/* 페이지네이션 스타일 */
+.page ul {
+    list-style: none; /* 리스트의 점을 없앱니다 */
+    padding: 0;
+    text-align: center; /* 페이지 번호를 가운데 정렬합니다 */
+}
+
+.page li {
+    display: inline-block; /* 리스트 아이템을 가로로 표시합니다 */
+    margin-right: 5px; /* 우측 마진을 추가하여 각각의 아이템을 분리합니다 */
+}
+
+.page li a {
+    display: inline-block;
+    padding: 8px 12px; /* 패딩을 추가하여 링크의 크기를 조정합니다 */
+    background-color: #f0f0f0; /* 배경 색상을 설정합니다 */
+    color: #333; /* 텍스트 색상을 설정합니다 */
+    text-decoration: none; /* 텍스트 밑줄을 없앱니다 */
+    border-radius: 4px; /* 경계의 모서리를 둥글게 합니다 */
+    transition: background-color 0.3s; /* 배경 색상 변경시 애니메이션을 적용합니다 */
+}
+
+.page li a:hover, .page li a.active {
+    background-color: #45a049; /* 호버 시 배경색 변경 */
+    color: white; /* 마우스 오버 시 텍스트 색상을 변경합니다 */
+}

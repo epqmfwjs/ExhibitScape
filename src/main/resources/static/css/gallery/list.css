@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+#banner {
+    width: 100%;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.gallery-item {
+	display: inline-block;
+	margin: 10px;
+	text-align: center;
+}
+
+.gallery-image {
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+}
+
+.category-button {
+	margin-right: 10px;
+	padding: 5px 10px;
+	background-color: #f1f1f1;
+	border: none;
+	cursor: pointer;
+}
+
+.category-button.active {
+	background-color: #ddd;
+}

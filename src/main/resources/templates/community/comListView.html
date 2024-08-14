@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>전시상황</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/community/comListcss.css}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+</head>
+<body>
+<div layout:fragment="content">
+<form method="post" enctype="multipart/form-data">
+	<!-- 게시글 목록 -->
+		<div class="category-image"></div>
+		<div class="community-list">
+			<!-- 카테고리 버튼 -->
+			<div class="category-buttons">
+				<button class="category-btn" data-category="전체" onclick="filterByCategory(this)">전체</button>
+			    <button class="category-btn" data-category="전시 소식" onclick="filterByCategory(this)">전시 소식</button>
+				<button class="category-btn" data-category="전시장 주변 정보" onclick="filterByCategory(this)">전시장 주변 정보</button>
+				<button class="category-btn" data-category="전시 질문" onclick="filterByCategory(this)">전시 질문</button>
+				<button class="category-btn" data-category="기타" onclick="filterByCategory(this)">기타</button>
+			</div>
+			<!-- 글쓰기버튼 -->
+			<div class="write-btns">
+			  <label for="write-link">
+			    <i class="fi fi-bs-pencil"></i>
+			  </label>
+			  <a href="/exhibitscape/community/communityWriteView" id="write-link" class="write-btn">글쓰기</a>
+			</div>
+		 <div class="community-item" th:each="community : ${pageCommunity}">
+			<div class="item-content">
+				<div class="category" th:text="${community.comCategory}"></div>
+					<div class="title">
+						<a th:href="@{/exhibitscape/community/communityDetail/{comId}(comId=${community.comId})}" th:text="${community.comTitle}"></a>
+					</div>
+					<div class="writer-info">
+						<span class="writer" th:text="${community.memberId}"></span> |&nbsp;&nbsp;
+						<span class="date" th:text="${#temporals.format(community.postDate, 'yyyy-MM-dd')}"></span> |&nbsp;&nbsp;
+						<span class="comment-count" th:text="'댓글 ' + ${community.commentList.size()}"></span>
+					</div>
+			</div>
+			<div class="item-image" th:if="${community.comImgSname != null and community.comImgSname != ''}">
+				<img th:src="@{/comFile/{comImgPath}/{comImgSname}(comImgPath=${community.comImgPath}, comImgSname=${community.comImgSname})}" alt="Community Image">
+			</div>
+		</div>
+		<!-- 페이징처리 -->
+		<!-- Pagination 영역 시작 -->
+<div class="pagination" th:if="${pageCommunity.totalPages > 0}">
+    <ul>
+        <!-- Previous 버튼 -->
+        <li th:class="${pageCommunity.first} ? 'disabled'">
+            <a th:href="@{/exhibitscape/community/communityList(page=${pageCommunity.number - 1})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <!-- 페이지 번호 버튼 -->
+        <li th:each="pageNum : ${#numbers.sequence(0, pageCommunity.totalPages - 1)}"
+            th:class="${pageNum == pageCommunity.number} ? 'active'">
+            <a th:href="@{/exhibitscape/community/communityList(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+        </li>
+
+        <!-- Next 버튼 -->
+        <li th:class="${pageCommunity.last} ? 'disabled'">
+            <a th:href="@{/community/communityList(page=${pageCommunity.number + 1})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<!-- Pagination 영역 끝 -->
+	</div>
+</form>
+<script>
+
+//카테고리 버튼 클릭 이벤트 핸들러
+function filterByCategory(button) {
+  var category = $(button).data('category');
+  console.log(category);
+
+  // 현재 URL 가져오기
+  var currentUrl = new URL(window.location.toString());
+
+  // 새로운 URLSearchParams 객체 생성
+  //currentUrl.search -> ?category=전시 소식
+  var searchParams = new URLSearchParams(currentUrl.search);
+
+  // category 파라미터 수정
+  if (category === '전체') {
+    searchParams.delete('category');
+  } else {
+    searchParams.set('category', category);
+  }
+
+  // 새로운 쿼리 파라미터 설정
+  currentUrl.search = searchParams.toString();
+
+  // URL 변경 (새로고침 없이)
+  history.replaceState(null, null, currentUrl.toString());
+}
+</script>
+</div>
+</body>
+</html>

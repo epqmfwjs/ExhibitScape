@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ExhibitScape join</title>
+    <link rel="stylesheet" th:href="@{/css/member/joinCss.css}">
+</head>
+<body>
+<div class="join-container">
+    <a href="/" class="logo-link">
+        <div class="logo">
+            <img src="./image/member/loginlogo.png" alt="ExhibitScape Logo">
+        </div>
+    </a>
+    <h4>Sign Up</h4>
+    <form  method="post" th:object="${joinDTO}" th:action="@{/join}">
+ ${joinDTO} = [[${joinDTO}]]<hr/>
+ #fields.hasAnyErrors() = [[${#fields.hasAnyErrors()}]]<hr/>
+ 
+ <!-- 에러가 있으면 에러가 출력되는 영역 -->
+   <div class="mb-2 alert alert-warning" role="alert" 
+        th:if="${#fields.hasAnyErrors()}">
+   	<div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+   </div>		
+    
+        <div class="input-group">
+            <input type="text" th:field="*{memberId}"  placeholder="아이디" />
+            <span th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}">회원 ID 오류</span>
+        </div>
+        <div class="input-group">
+            <input type="password" th:field="*{password1}"  placeholder="비밀번호" />
+        </div>
+        <div class="input-group">
+            <input type="password" th:field="*{password2}" placeholder="비밀번호 확인" />
+            <span th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}">비밀번호 확인 오류</span>
+       </div>
+        <div class="input-group">
+            <input type="text" th:field="*{nickname}"  placeholder="닉네임" />
+            <span th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">닉네임 오류</span>
+        </div>
+        <div class="input-group">
+            <input type="email" th:field="*{email}" id="email" placeholder="이메일" />
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">이메일 오류</span>
+        </div>
+ <!--        <div class="input-group">
+            <label for="agree-terms">
+                <input type="checkbox" name="agreeTerms" id="agree-terms" required />개인정보 수집 및 활용에 동의합니다
+            </label>
+        </div>
+ -->        
+        <input type="submit" value="Join" />
+    </form>
+    <div class="additional-links">
+        <a href="/login">Already have an account? Login</a>
+    </div>
+</div>
+</body>
+</html>

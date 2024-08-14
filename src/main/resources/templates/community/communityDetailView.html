@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>전시상황</title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/community/comDetailcss.css}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div layout:fragment="content">	
+<form th:action="@{/exhibitscape/community/communityReWriteView/__${comDTO.comId}__}" method="post" enctype="multipart/form-data">
+				<div class="category-image"></div>
+			<div class="item-content">
+				<div class="top-content">
+					<div class="category" th:text="${comDTO.comCategory}"></div>
+					<div class="title" th:text="${comDTO.comTitle}"></div>
+					<div class="writer-info">
+						<span class="writer" th:text="${comDTO.memberId}"></span> | 
+						<span class="date" th:text="${#temporals.format(comDTO.postDate, 'yyyy-MM-dd')}"></span>
+					</div>
+				</div>
+				<div class="item-image" th:if="${comDTO.comImgSname != null and comDTO.comImgSname != ''}">
+					<img th:src="@{/comFile/{comImgPath}/{comImgSname}(comImgPath=${comDTO.comImgPath}, comImgSname=${comDTO.comImgSname})}" alt="Community Image">
+					<input type="hidden" name="comImgSname" th:value="${comDTO.comImgSname}">
+					<input type="hidden" name="comImgPath" th:value="${comDTO.comImgPath}">
+				</div>
+				<div class="content" th:text="${comDTO.comContent}"></div>
+				<div class="comment-wrap reply">
+					<div class="comment-list">
+						<ul>
+							<li class="comment-li" th:each="comment:${comDTO.commentList}">
+							<div class="comment-item">
+								<div class="comment-thumb">
+									<div class="profile-img">이미지영역</div>
+								</div>
+								<div class="comment-content">
+									<div class="comment-info">
+										<div class="user-info">
+											<span class="name" th:text="${comment.memberId}"></span>
+											<span class="postDate"  th:text="${#temporals.format(comment.postDate, 'yyyy-MM-dd')}"></span>
+										</div>
+									</div>
+									<div class="comment-text" th:text="${comment.comContent}" th:data-comcom-id="${comment.comComId}"></div>
+									<div class="comment-btn">
+										  <input type="button" class="comment-update-btn" value="수정" th:onclick="'enterEditMode(' + ${comment.comComId} + ')'"/>
+										  <input type="button" class="comment-delete-btn" value="삭제" th:onclick="'deleteComment(' + ${comment.comComId} + ')'"/>
+										  <button class="save-comment" style="display: none;">수정 완료</button>
+									</div>
+								</div>
+							</div>
+						</ul>
+					</div>
+					<div class="comment-area">
+						<!-- 댓글쓰기 -->
+						<div class="col-10">
+							<textarea class="comment-write-area" maxlength="1000" placeholder="로그인 후 이용가능합니다."></textarea>
+						</div>
+						<div class="comment-btn">
+							<div>
+								<span class="current"></span>
+								<span class="total"></span>
+							</div>
+							<div>
+								<input type="button" class="comment-confirm-btn" value="댓글 등록" th:onclick="'submitComment(' + ${comDTO.comId} + ')'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="button-group">
+  				<div class="submit-group">
+  				  <a th:href="@{/exhibitscape/community/communityList}" class="list-button">목록</a>
+  				</div>
+  				<div class="edit-group">
+					<button type="submit" class="edit-button">수정</button> 				 
+				</div>
+			</div>
+			</div>
+		</form>
+<script>
+//댓글 등록..
+function submitComment(comId) {
+	  var commentContent = $(".comment-write-area").val().trim();
+	  if (commentContent === "") {
+	    alert("댓글 내용을 입력해주세요.");
+	    return;
+	  }
+
+	  $.ajax({
+	    type: "POST",
+	    url: "/exhibitscape/comment/write/" + comId,
+	    data: { comContent: commentContent },
+	    success: function(response) {
+	      var newComment = response;
+	      var postDate = new Date(newComment.postDate);
+	      var formattedDate = postDate.toISOString().split('T')[0];
+	      var commentHtml = `
+	        <li class="comment-li">
+	          <div class="comment-item">
+	            <div class="comment-thumb">
+	              <div class="profile-img">이미지영역</div>
+	            </div>
+	            <div class="comment-content">
+	              <div class="comment-info">
+	                <div class="user-info">
+	                  <span class="name">${newComment.memberId}</span>
+	                  <span class="postDate">${newComment.postDate}</span>
+	                </div>
+	              </div>
+	              <div class="comment-text" data-comcom-id="${newComment.comComId}">${newComment.comContent}</div>
+	              <div class="comment-btn">
+	                <input type="button" class="comment-update-btn" value="수정" onclick="enterEditMode(${newComment.comComId})"/>
+	                <input type="button" class="comment-delete-btn" value="삭제" onclick="deleteComment(${newComment.comComId})"/>
+	                <button class="save-comment" style="display: none;">수정 완료</button>
+	              </div>
+	            </div>
+	          </div>
+	        </li>
+	      `;
+	      $(".comment-list ul").append(commentHtml);
+	      $(".comment-write-area").val("");
+	    },
+	    error: function(xhr, status, error) {
+	      alert("댓글 등록에 실패했습니다.");
+	    }
+	  });
+	}
+
+function enterEditMode(comComId) {
+	  var $commentText = $(".comment-text[data-comcom-id='" + comComId + "']");
+	  var originalText = $commentText.text(); // 원래 댓글 내용 저장
+	  $commentText.attr('contenteditable', 'true');
+	  $commentText.focus();
+	  var $commentBtn = $commentText.closest('.comment-content').find('.comment-btn');
+	  $commentBtn.find('.comment-update-btn, .comment-delete-btn').hide(); // 수정, 삭제 버튼 숨기기
+	  var $saveButton = $commentBtn.find('.save-comment');
+	  $saveButton.show();
+	  $saveButton.off('click').on('click', function() {
+	    updateComment(comComId, originalText);
+	    return false; // 폼 제출 방지
+	  });
+	}
+
+	function updateComment(comComId, originalText) {
+	  var $commentText = $(".comment-text[data-comcom-id='" + comComId + "']");
+	  var comContent = $commentText.text().trim();
+	  if (comContent === "") {
+	    alert("댓글 내용을 입력해주세요.");
+	    $commentText.text(originalText); // 원래 댓글 내용으로 되돌림
+	    return;
+	  }
+	  $.ajax({
+	    type: 'POST',
+	    url: '/exhibitscape/comment/update/' + comComId,
+	    data: { comContent: comContent },
+	    success: function(response) {
+	      var updatedComment = response;
+	      var postDate = new Date(updatedComment.postDate);
+	      var formattedDate = postDate.toISOString().split('T')[0];
+	      $commentText.siblings('.comment-info').find('.postDate').text(formattedDate);
+	      $commentText.attr('contenteditable', 'false');
+	      var $commentBtn = $commentText.closest('.comment-content').find('.comment-btn');
+	      $commentBtn.find('.comment-update-btn, .comment-delete-btn').show(); // 수정, 삭제 버튼 보이기
+	      $commentBtn.find('.save-comment').hide(); // 수정완료 버튼 숨기기
+	    },
+	    error: function() {
+	      alert('댓글 수정에 실패했습니다.');
+	      $commentText.text(originalText); // 원래 댓글 내용으로 되돌림
+	    }
+	  });
+	}
+</script>
+</div>		
+</body>
+</html>

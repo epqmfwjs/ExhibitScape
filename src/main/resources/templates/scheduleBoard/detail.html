@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+ <meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/scheduleBoard/detail.css">
+
+</head>
+<body>
+<div layout:fragment="content">
+<div id="banner">
+ 	<img src="/image/scheduleBoard/exhibitscape.png" alt="배너 이미지">
+</div>
+<input type="hidden" id="boardNo" th:value="${detailList.no}">
+	<div class="container">
+		<div class="left">
+		    <div class="topmenw">
+		        <p th:text="'작성일  : '+${#temporals.format(detailList.create_date, 'yyyy-MM-dd HH:mm:ss')}"></p>
+		        <input type="button" value="← Go Back List" onclick="location.href='/scheduleBoard/list';" class="center"/>
+		    </div>
+		    <hr/>
+			<!--<a th:href="@{/scheduleBoard/delete(no=${detailList.no})}"onclick="return confirm('게시글을 삭제 하시겠습니까?')">글삭제(관리자)</a>
+			<a th:href="@{/scheduleBoard/update(no=${detailList.no})}">글수정(관리자)</a>
+			<input type="button" value="글목록" onclick="location.href='/scheduleBoard/list';"/>-->
+			<div class="imgCon">
+			 	<!--이미지 사이즈 600x400 이미지경로는 /image/scheduleBoard/이미지명.jpg -->
+				<img th:src="@{${detailList.imgOFile}}" onerror="this.onerror=null;this.src='/image/scheduleBoard/default_IMG.jpg'" alt="Image"/><hr/>
+			</div>
+			<!--<img src="https://via.placeholder.com/600x400" alt="임시이미지"><hr/>-->
+			<div class="comment-section">
+				<h3>Comments</h3>
+    			<!-- 댓글목록 Comments -->
+    			<!-- 모델이 담아온 comments 에 데이터가있는지 없는지 판단후 있다면 th:each 문을 사용하여 화면에 뿌려줌  -->
+				
+
+				<div th:each="comment : ${comments}" class="comment-container">
+	        		<span>
+		                <strong th:text="${comment.memberId}"></strong>
+		            </span>
+		            &nbsp:&nbsp&nbsp
+	    			<span class="comment-content" th:text="${comment.getContent()}" th:id="'comment-' + ${comment.getC_no()}"></span>
+	   					 <div class="comment-action">
+	        				<span th:utext="${comment.updatedAt != null ? 
+					            '수정일 : ' + #temporals.format(comment.updatedAt, 'yyyy-MM-dd HH:mm') + ' / ' +
+					            '작성일 : ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm') : 
+					            '작성일 : ' + #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+						     <div th:if="${memberId} == ${comment.memberId}">
+						        <button th:attr="data-no=${no},data-comment-no=${comment.getC_no()}" onclick="editComment(this)">수정</button>
+						        <button th:onclick="|confirmDelete(${no}, ${comment.C_no})|">삭제</button>		    			
+		    				</div>
+	    				</div>
+					</div>
+					<div>
+					<!-- 댓글 Form -->
+	    			<h5>Comment:</h5>
+						<div>
+							<form name = "commentForm" th:action="@{/review/board/{no}(no=${no})/comment(C_no=${C_no})}" th:method="post" onsubmit="return validateForm()">
+            					<div>
+									<!-- 위에 코드로 no를 @PathVariable 방식으로 보내고 받으려고 하였지만 무슨이유인지 모르겠지만 
+									계속 Long타입의 정수가아닌 String 타입에 문자열로 보내져 오류를 발생 임시방편으로 밑에코드인 hidden으로
+									넘겨 @RequestParam 으로 넘겨받아 로직수행 중ㅠㅠ -->
+		                 			<input type="hidden" name="no" th:value="${no}" />
+		                			<textarea name="content" rows="3"></textarea>
+            					</div>
+		            				<button type="submit" class="submit">등록</button>
+		        			</form>
+            			</div>
+					</div>
+				</div>
+			</div>
+			<div class="right">
+				<div class="right-header">
+			    	<h2>[[${detailList.title}]]</h2>
+				</div>
+		    		<div class="right-body">
+				        <p><h4>행사 일정</h4><br/>[[${detailList.start_date}]] ~ [[${detailList.end_date}]]</p><hr/>
+				        <p><h4>행사 장소</h4><br/>[[${detailList.place}]]</p><hr/>
+				        <p><h4>입장료</h4><br/>[[${detailList.price}]]원</p><hr/>
+				        <p><h4>주최 및 후원</h4><br/>[[${detailList.organizers}]]</p><hr/>
+				        <p><h4>소개</h4><br/>[[${detailList.content}]]</p><hr/>
+				    </div>
+		    		<div class="right-footer">
+				        <p>담당자 : [[${detailList.master}]]</p>
+				        <p>TEL : [[${detailList.master_TEL}]]</p>
+				        <p>E Mail : [[${detailList.master_EMAIL}]]</p>
+				    </div>	
+				</div>
+			</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/scheduleBoard/comment.js"></script>
+		</div>
+</body>
+</html>

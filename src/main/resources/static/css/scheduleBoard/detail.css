@@ -1,0 +1,197 @@
+@charset "UTF-8";
+
+		
+/* 기본 설정 */
+body {
+    font-family: Arial, sans-serif; /* 폰트 설정 */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* 배경색 */
+}
+
+/* 그리드 컨테이너 설정 */
+.container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* 왼쪽 그리드를 조금 더 넓게 조정 */
+    gap: 20px; /* 그리드 사이의 간격 */
+    padding: 40px; /* 컨테이너의 내부 여백 */
+    max-width: 1400px; /* 컨테이너의 최대 너비 설정 */
+    margin: 0 auto; /* 좌우 마진을 auto로 설정하여 컨테이너를 중앙에 배치 */
+}
+
+/* 왼쪽 및 오른쪽 섹션 설정 */
+.left, .right {
+    background-color: white; /* 배경색 */
+    padding: 20px; /* 내부 여백 */
+    border-radius: 8px; /* 테두리 둥글기 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 제목 설정 */
+h1, h2 {
+    color: #333; /* 제목 색상 */
+}
+
+/* 이미지 설정 */
+img {
+    max-width: 100%; /* 최대 너비 */
+    height: auto; /* 높이 자동 조정 */
+    border-radius: 8px; /* 이미지 테두리 둥글기 */
+}
+
+/* 댓글 섹션 설정 */
+.comment-section {
+    margin-top: 20px; /* 상단 여백 */
+}
+
+/* 입력란 설정 */
+textarea {
+    width: 96%; /* 너비 */
+    height: 100px; /* 높이 */
+    padding: 15px; /* 내부 여백 증가 */
+    margin-bottom: 20px; /* 하단 여백 증가 */
+    border-radius: 8px; /* 테두리 둥글기 증가 */
+    border: 1px solid #ccc; /* 테두리 색상 */
+    background-color: #f8f8f8; /* 배경색 변경 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    font-family: 'Noto Sans', sans-serif; /* 폰트 변경 */
+    font-size: 14px; /* 폰트 크기 */
+    color: #333; /* 폰트 색상 */
+    resize: none; /* 크기 조절 비활성화 */
+    transition: border-color 0.3s, box-shadow 0.3s; /* 트랜지션 효과 추가 */
+}
+
+textarea:focus {
+    border-color: #007bff; /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 0 3px rgba(0,123,255,.25); /* 포커스 시 그림자 색상 변경 */
+}
+
+
+
+/* 댓글 스타일 */
+#comments {
+    margin-top: 20px; /* 상단 여백 */
+}
+
+.comment {
+    padding: 10px; /* 내부 여백 */
+    border-bottom: 1px solid #ccc; /* 하단 테두리 */
+    margin-bottom: 10px; /* 하단 여백 */
+}
+
+/* 오른쪽 섹션을 3등분으로 나누기 위한 설정 */
+.right {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* 헤더, 본문, 푸터 */
+    gap: 10px; /* 그리드 아이템 사이의 간격 */
+}
+
+/* 오른쪽 헤더, 본문, 푸터 스타일 */
+.right-header, .right-body, .right-footer {
+    padding: 10px; /* 내부 여백을 10px로 설정 */
+    background-color: #f9f9f9; /* 배경색을 밝은 회색으로 설정 */
+    border-radius: 4px; /* 모서리를 둥글게 4px로 설정 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 그림자를 추가하여 입체감 부여 */
+}
+
+/* 댓글 컨테이너 스타일 수정 */
+.comment-container {
+    display: flex; /* 플렉스박스를 사용하여 내부 요소를 정렬 */
+    background-color: #f9f9f9; /* 배경색을 설정 */
+    align-items: center; /* 내부 요소를 수직 중앙 정렬 */
+    justify-content: space-between; /* 내부 요소 사이에 공간을 균등하게 분배 */
+    margin-bottom: 10px; /* 컨테이너 간의 아래 여백을 10px로 설정 */
+}
+
+/* 댓글 컨테이너 내부의 내용 부분 */
+.comment-content {
+    flex-grow: 1; /* 남은 공간을 모두 채우도록 설정 */
+    margin-right: 10px; /* 오른쪽 여백 설정 */
+}
+
+/* 댓글 컨테이너 내부의 날짜 및 버튼 컨테이너 */
+.comment-action {
+    display: flex; /* 플렉스박스를 사용하여 내부 요소 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+.comment-action > * {
+    margin-left: 10px; /* 버튼 및 날짜 사이의 간격 */
+}
+/* 기본 버튼 스타일 */
+input[type="button"] {
+  border: none; /* 테두리 제거 */
+  background-color: #4CAF50; /* 기본 배경색 */
+  color: white; /* 글자색 */
+  padding: 10px 20px; /* 패딩 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  text-decoration: none; /* 텍스트 밑줄 없앰 */
+  display: inline-block; /* 인라인 블록 표시 */
+  font-size: 16px; /* 글자 크기 */
+  margin: 4px 2px; /* 마진 */
+  cursor: pointer; /* 커서 모양을 포인터로 */
+  border-radius: 4px; /* 테두리 둥글기 */
+  transition: background-color 0.2s ease, transform 0.2s ease; /* 색상과 위치 변환 애니메이션 적용 */
+}
+
+/* 마우스 호버 시 스타일 */
+input[type="button"]:hover {
+  background-color: #45a049; /* 호버 시 배경색 변경 */
+  transform: translateX(10px); /* 옆으로 이동하는 효과 */
+}
+
+/* 기본 버튼 스타일 */
+.submit {
+  border: none; /* 테두리 제거 */
+  background-color: #4CAF50; /* 기본 배경색 */
+  color: white; /* 글자색 */
+  padding: 10px 20px; /* 패딩 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  text-decoration: none; /* 텍스트 밑줄 없앰 */
+  display: inline-block; /* 인라인 블록 표시 */
+  font-size: 16px; /* 글자 크기 */
+  margin: 4px 2px; /* 마진 */
+  cursor: pointer; /* 커서 모양을 포인터로 */
+  border-radius: 4px; /* 테두리 둥글기 */
+  transition: background-color 0.2s ease, transform 0.2s ease; /* 색상과 위치 변환 애니메이션 적용 */
+}
+
+/* 마우스 호버 시 스타일 */
+.submit {
+  background-color: #45a049; /* 호버 시 배경색 변경 */
+  transform: translateX(10px); /* 옆으로 이동하는 효과 */
+}
+
+.imgCon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 부모 요소의 높이를 설정하여 중앙 정렬 */
+}
+        
+.imgCon img{
+    width: 600px; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+    margin: 0px 120px; /* 마진 */
+}
+.topmenw {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.center {
+    margin: 0 auto;
+}
+#banner {
+    width: 100%;
+    text-align: center;
+    margin-top: 60px; /* 헤더의 높이만큼 여백 추가 */
+}
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+
