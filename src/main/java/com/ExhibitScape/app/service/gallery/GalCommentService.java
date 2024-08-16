@@ -85,4 +85,5 @@ public class GalCommentService {
         galCommentRepository.deleteById(id);
         return galId;
     }
+    
 }

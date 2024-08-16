@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   margin: 0;
   background-color: #fff;
 }
@@ -7,7 +7,7 @@ body {
 
 .category-image {
   width: 100%;
-  height: 150px; /* 원하는 높이로 조정 */
+  height: 210px; /* 원하는 높이로 조정 */
   background-image: url('/image/community/community.png'); /* 이미지 경로 설정 */
   background-size: cover;
   background-position: center;
@@ -82,49 +82,63 @@ body {
   color: #666;
   margin-bottom: 40px;
   text-align: center;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 60px;
+  align-items: center;
   
 }
 .button-group {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  align-items: center; /* 새로 추가한 코드 */
 }
 
-.submit-group ,
-.edit-group {
- text-align: center;
+.submit-group {
+  text-align: left;
+}
+
+.edit-delete-group {
+  display: flex; /* 새로 추가한 코드 */
+  text-align: right;
+}
+
+.edit-group,
+.delete-group {
+  text-align: right;
 }
 
 .list-button,
-.edit-button {
+.edit-button,
+.delete-button {
   display: inline-block;
-  padding: 10px 60px;
+  padding: 10px 25px;
   text-decoration: none;
   color: #fff;
   font-weight: bold;
   font-size: 16px;
+  background-color: #000000;
+  border: 1px solid #000000;
+  margin-left: 10px; /* 새로 추가한 코드 */
 }
 
 .list-button {
   background-color: #fff;
-  border: 1px solid #000000;
- 
-  
+  color: #000000;
+  margin-left: 0; /* 새로 추가한 코드 */
 }
 
-.edit-button {
-  background-color: #000000;
-  margin-left: auto;
-}
+.edit-button,
+.delete-button {
+  margin-left: 15px; /* 새로 추가한 코드 */
+}S
 
 .list-button:hover,
-.edit-button:hover {
+.edit-button:hover,
+.delete-button:hover {
   opacity: 0.8;
 }
-.submit-group a.list-button:visited {
-  color: #333; /* 방문한 링크 색상을 검은색으로 설정 */
+
+.submit-group a:visited {
+  color: #333;
 }
 
 .comment-wrap {
@@ -164,6 +178,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+
+}
+
+.profile-img img {
+    width: 100%; /* 이미지 너비를 부모 요소에 맞게 설정 */
+    height: 100%; /* 이미지 높이를 부모 요소에 맞게 설정 */
+    object-fit: cover; /* 이미지를 부모 요소에 맞게 잘라내기 */
 }
 
 .comment-content {
@@ -251,9 +272,38 @@ body {
 .comment-update-btn:hover,
 .comment-delete-btn:hover,
 .save-comment:hover {
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .save-comment {
   display: none;
+}
+
+/*좋아요*/
+.like {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.like-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.like-btn {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.like-count {
+    font-size: 14px;
+}
+
+.map{
+	margin:50px auto;
+	width:80%;
+	height:350px;
 }

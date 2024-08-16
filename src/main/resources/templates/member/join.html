@@ -2,53 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ExhibitScape join</title>
+    <title>전시상황</title>
     <link rel="stylesheet" th:href="@{/css/member/joinCss.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/member/joinJs.js}"></script>
 </head>
 <body>
 <div class="join-container">
     <a href="/" class="logo-link">
         <div class="logo">
-            <img src="./image/member/loginlogo.png" alt="ExhibitScape Logo">
+            <img th:src="@{/image/member/logo.png}" alt="ExhibitScape Logo">
         </div>
     </a>
-    <h4>Sign Up</h4>
-    <form  method="post" th:object="${joinDTO}" th:action="@{/join}">
- ${joinDTO} = [[${joinDTO}]]<hr/>
- #fields.hasAnyErrors() = [[${#fields.hasAnyErrors()}]]<hr/>
- 
- <!-- 에러가 있으면 에러가 출력되는 영역 -->
-   <div class="mb-2 alert alert-warning" role="alert" 
-        th:if="${#fields.hasAnyErrors()}">
-   	<div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-   </div>		
-    
+    <h2>Sign Up</h2>
+    <form method="post" th:object="${joinDTO}">
+        <div class="mb-2 alert alert-warning" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+        </div>
+
         <div class="input-group">
-            <input type="text" th:field="*{memberId}"  placeholder="아이디" />
+            <input type="text" id="memberId" name="memberId" class="memberId" placeholder="아이디" th:field="*{memberId}" />
+            <button type="button" class="idcheck" id="idcheck" name="idcheck">중복체크</button>
             <span th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}">회원 ID 오류</span>
         </div>
         <div class="input-group">
-            <input type="password" th:field="*{password1}"  placeholder="비밀번호" />
+            <input type="password" id="password1" name="password1" class="password1" placeholder="비밀번호" th:field="*{password1}" />
         </div>
         <div class="input-group">
-            <input type="password" th:field="*{password2}" placeholder="비밀번호 확인" />
+            <input type="password" id="password2" name="password2" class="password2" placeholder="비밀번호 확인" th:field="*{password2}" />
             <span th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}">비밀번호 확인 오류</span>
-       </div>
+        </div>
         <div class="input-group">
-            <input type="text" th:field="*{nickname}"  placeholder="닉네임" />
+            <input type="text" id="nickname" name="nickname" class="nickname" placeholder="닉네임" th:field="*{nickname}" />
+            <button type="button" class="nicknamecheck" id="nicknamecheck" name="nicknamecheck">중복체크</button>
             <span th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">닉네임 오류</span>
         </div>
         <div class="input-group">
-            <input type="email" th:field="*{email}" id="email" placeholder="이메일" />
+            <input type="email" id="email" name="email" class="email" placeholder="이메일" th:field="*{email}" />
+            <button type="button" class="emailcheck" id="emailcheck" name="emailcheck">중복체크</button>
             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">이메일 오류</span>
         </div>
- <!--        <div class="input-group">
+        <div class="input-group agree-terms">
             <label for="agree-terms">
-                <input type="checkbox" name="agreeTerms" id="agree-terms" required />개인정보 수집 및 활용에 동의합니다
+                <input type="checkbox" name="agreeTerms" id="agree-terms" required />
+                <span>개인정보 수집 및 활용에 동의합니다</span>
             </label>
         </div>
- -->        
-        <input type="submit" value="Join" />
+        <input type="submit" value="Join" id="join-submit" disabled />
     </form>
     <div class="additional-links">
         <a href="/login">Already have an account? Login</a>

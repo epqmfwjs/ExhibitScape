@@ -3,8 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}"><head>
 <meta charset="UTF-8">
-<title>update</title>
+<title>전시상황</title>
 <link rel="stylesheet" href="/css/gallery/update.css">
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -14,12 +16,34 @@
 </div>
 <form action="/gallery/update" method="post" name="updateForm">
   <input type="hidden" name="galId" th:value="${galleryUpdate.galId}">
-  제목: <input type="text" name="galTitle" th:value="${galleryUpdate.galTitle}"> <br>
-  기간: <input type="text" name="galPeriod" th:value="${galleryUpdate.galPeriod}"> <br>
-  장소: <input type="text" name="galLocation" th:value="${galleryUpdate.galLocation}"> <br>
-  주소: <input type="text" name="galAddress" th:value="${galleryUpdate.galAddress}"> <br>
-  장르: <input type="text" name="galGenre" th:value="${galleryUpdate.galGenre}"> <br>
-  내용: <textarea name="galInfo" cols="30" rows="10" th:text="${galleryUpdate.galInfo}"></textarea> <br>  
+  <label for="galTitle">제목:</label> 
+  <input type="text" id="galTitle" name="galTitle" th:value="${galleryUpdate.galTitle}" required> <br>
+  <label for="galPeriod">기간:</label> 
+  <input type="text" id="galPeriod" name="galPeriod" th:value="${galleryUpdate.galPeriod}" readonly> <br>
+ <label for="galLocation">장소:</label>
+    <select id="galLocation" name="galLocation" required>
+        <option value="">선택하세요</option>
+        <option value="서울" th:selected="${galleryUpdate.galLocation == '서울'}">서울</option>
+        <option value="경기" th:selected="${galleryUpdate.galLocation == '경기'}">경기</option>
+        <option value="경기" th:selected="${galleryUpdate.galLocation == '인천'}">인천</option>
+        <option value="강원" th:selected="${galleryUpdate.galLocation == '강원'}">강원</option>
+        <option value="충청" th:selected="${galleryUpdate.galLocation == '충청'}">충청</option>
+        <option value="전라" th:selected="${galleryUpdate.galLocation == '전라'}">전라</option>
+        <option value="경상" th:selected="${galleryUpdate.galLocation == '경상'}">경상</option>
+        <option value="제주" th:selected="${galleryUpdate.galLocation == '제주'}">제주</option>
+    </select> <br/>
+  <input type="text" id="galAddress" name="galAddress" th:value="${galleryUpdate.galAddress}" readonly> <br>
+    <label for="galGenre">장르:</label>
+    <select id="galGenre" name="galGenre" required>
+        <option value="">선택하세요</option>
+        <option value="현대" th:selected="${galleryUpdate.galGenre == '현대'}">현대</option>
+        <option value="고전" th:selected="${galleryUpdate.galGenre == '고전'}">고전</option>
+        <option value="건축" th:selected="${galleryUpdate.galGenre == '건축'}">건축</option>
+        <option value="기타" th:selected="${galleryUpdate.galGenre == '기타'}">기타</option>
+    </select> <br/>
+  <label for="galInfo">내용:</label> 
+  <textarea id="galInfo" name="galInfo" cols="30" rows="10" th:text="${galleryUpdate.galInfo}" required></textarea> <br>  
+
   <input type="hidden" name="boardHits" th:value="${galleryUpdate.galHits}">
   <input type="button" value="글수정" onclick="galleryUpdate()">
 </form>

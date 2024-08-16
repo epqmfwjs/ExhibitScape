@@ -1,14 +1,15 @@
 package com.ExhibitScape.app.dto.gallery;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ExhibitScape.app.domain.gallery.GalleryEntity;
 import com.ExhibitScape.app.domain.gallery.GalleryFileEntity;
+import com.ExhibitScape.app.domain.member.MemberDomain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +38,10 @@ public class GalleryDTO {
 	private List<String> galImgOfile;
 	private List<String> galImgSfile;
 	private int fileAttached;
+	
+	//추가
+	private Set<MemberDomain> rec; //추천인목록
+
 
 	public GalleryDTO(Long galId, String galTitle, String galAddress, String galLocation, int galHits,
 			LocalDateTime galPostDate) {
@@ -80,7 +85,5 @@ public class GalleryDTO {
 		}
 		return galleryDTO;
 	}
-
-
 		
 }

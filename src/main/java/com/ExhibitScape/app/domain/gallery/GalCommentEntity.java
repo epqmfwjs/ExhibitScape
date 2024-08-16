@@ -2,6 +2,7 @@ package com.ExhibitScape.app.domain.gallery;
 
 import java.time.LocalDateTime;
 
+import com.ExhibitScape.app.domain.member.MemberDomain;
 import com.ExhibitScape.app.dto.gallery.GalCommentDTO;
 
 import jakarta.persistence.Column;
@@ -29,7 +30,7 @@ public class GalCommentEntity extends BaseEntity {
 	@Column
 	private String memberId;
 	
-	@Column
+	@Column(nullable = false)
 	private String galComContent;
 	
 	@Column
@@ -38,6 +39,10 @@ public class GalCommentEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gallery_galId")
 	private GalleryEntity galleryEntity;
+    
+	@ManyToOne
+    @JoinColumn(name = "member_id")
+    private MemberDomain member;
 	
 	public static GalCommentEntity toSaveEntity(GalCommentDTO galCommentDTO, GalleryEntity galleryEntity) {
 		GalCommentEntity galCommentEntity = new GalCommentEntity();
@@ -47,5 +52,6 @@ public class GalCommentEntity extends BaseEntity {
 		galCommentEntity.setGalleryEntity(galleryEntity);
 		return galCommentEntity; 
 	}
+
 
 }

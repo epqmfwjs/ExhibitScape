@@ -1,7 +1,9 @@
 package com.ExhibitScape.app.domain.community;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,10 +35,14 @@ public class ComComment extends BaseTimeEntity{
 	private String memberId;
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String comContent;
+	
 	@ManyToOne
 	@JoinColumn(name="comId")
-	@JsonIgnore
+	@JsonBackReference
 	private Community comId;
+	
+	@Column(nullable=true)
+	private String imgRandom;
 	
 	@Override
 	public String toString() {

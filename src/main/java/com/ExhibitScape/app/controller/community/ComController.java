@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +25,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ExhibitScape.app.domain.community.Community;
-import com.ExhibitScape.app.domain.community.CommunityRepository;
+import com.ExhibitScape.app.domain.member.MemberDomain;
 import com.ExhibitScape.app.dto.community.CommunityDTO;
 import com.ExhibitScape.app.service.community.CommunityService;
+import com.ExhibitScape.app.service.member.MemberDetailsService;
 
 
 
@@ -34,23 +42,64 @@ import com.ExhibitScape.app.service.community.CommunityService;
 public class ComController {
 	
 	@Autowired
-	private CommunityRepository communityRepository;
+	private CommunityService communityService;
 	
 	@Autowired
-	private CommunityService communityService;
+	private MemberDetailsService memberDetailsService;
 	
 	@Value("${spring.servlet.multipart.location}")//application.properties의 변수
 	private String uploadPath;
 	
+	//좋아요!
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/community/{comId}/like")
+	@ResponseBody
+	public Map<String, Object> toggleComLike(@PathVariable("comId") Integer comId, Principal principal) {
+	    MemberDomain memberDomain = memberDetailsService.getUser(principal.getName());
+	    boolean liked = communityService.toggleComLike(comId, memberDomain);
+	    int likeCount = communityService.getLikeCount(comId);
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("liked", liked);
+	    response.put("likeCount", likeCount);
+	    
+	    return response;
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/community/{comId}")
+	public String getCommunityDetails(@PathVariable("comId") Integer comId, Model model, Principal principal) {
+	    MemberDomain memberDomain = memberDetailsService.getUser(principal.getName());
+	    CommunityDTO communityDTO = communityService.getCommunityDetails(comId, memberDomain);
+	    
+	    model.addAttribute("communityDTO", communityDTO);
+	    return "community/details";
+	}
+	
+	
+	//글쓰기 폼
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/community/communityWriteView")
-	public String communityWriteView() {
+	public String communityWriteView(Principal principal,RedirectAttributes redirectAttributes ) {
+		
+		if (principal == null || principal.getName().isEmpty()) {
+	        redirectAttributes.addFlashAttribute("errorMessage", "로그인을 하셔야 글쓰기를 할 수 있습니다.");
+	        return "redirect:/exhibitscape/community/communityList"; // 로그인 페이지로 리다이렉트
+	    }
 		return "/community/communityWriteView";
 	}
 	
 	//글쓰기
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/community/communityWrite")
-	public String communityWrite(CommunityDTO communityDTO,@RequestParam("comFile") MultipartFile[] comFiles) {
-		
+	public String communityWrite(CommunityDTO communityDTO,@RequestParam("comFile") MultipartFile[] comFiles,
+									Principal principal
+									,@RequestParam(value="placeLat", required = false) String placeLat
+									,@RequestParam(value="placeLong", required = false) String placeLong
+									,@RequestParam(value="placeName", required = false) String placeName) {
+			
+			//로그인 유저의 정보를 가져오기
+			String memberId = principal.getName();
 		    String comImgSname = null;
 		    String comImgPath =null;
 	
@@ -82,6 +131,14 @@ public class ComController {
 	        }
 	    }
 	    
+	    //지도 처리
+	     if(placeLat!=null && placeLong !=null && placeName!=null) {
+	    	 communityDTO.setPlaceLat(placeLat);
+	    	 communityDTO.setPlaceLong(placeLong);
+	    	 communityDTO.setPlaceName(placeName);
+	     }
+	     
+	    communityDTO.setMemberId(memberId);
 	    communityDTO.setComImgPath(comImgPath);
 	    communityDTO.setComImgSname(comImgSname);
 		communityService.communityWrite(communityDTO);
@@ -89,10 +146,23 @@ public class ComController {
 		return "redirect:/exhibitscape/community/communityList";
 	}
 	
+	@GetMapping("/map-data")
+	@ResponseBody
+	public Map<String, Object> getMapData(@RequestParam("comId") Integer comId) {
+	    System.out.println("getMapData///////////////////////////////////////////////");
+	    CommunityDTO comDTO = communityService.communityDetailWithoutLike(comId);
+
+	    Map<String, Object> data = new HashMap<>();
+	    data.put("placeLat", comDTO.getPlaceLat());
+	    data.put("placeLong", comDTO.getPlaceLong());
+	    data.put("placeName", comDTO.getPlaceName());
+	    return data;
+	}
+	
 	//목록 조회
 	@GetMapping("/community/communityList")
 	public String communityList(Model model,@RequestParam(value="page", defaultValue="0") int page
-								,@RequestParam(value = "category", required = false) String category){
+								,@RequestParam(value = "category", required = false) String category,Principal principal){
 		//@RequestParam(value="page", defaultValue="0") int page,
 		//1.파라미터받기
 		//2.비즈니스로직수행
@@ -110,6 +180,15 @@ public class ComController {
 	        pageCommunity = communityService.findCommunitiesByCategory(category, pageable);
 	    }
 	    
+	    // 좋아요 정보 조회
+	    List<Integer> likedCommunity = null;
+	    
+	    if (principal != null) {
+	        String memberId = principal.getName();
+	        likedCommunity = communityService.findLikedCommunityIds(memberId);
+	    }
+	    
+	    model.addAttribute("likedCommunity", likedCommunity);
 	    model.addAttribute("pageCommunity", pageCommunity);
 		return "/community/comListView";
 	}
@@ -133,36 +212,59 @@ public class ComController {
 		return "/community/comListView";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	//글 수정 페이지
 	@GetMapping("/community/communityReWriteView/{comId}")
-	public String communityReWrite(@PathVariable("comId") Integer comId,Model model) {
+	public String communityReWrite(@PathVariable("comId") Integer comId,Model model,Principal principal) {
 		//1.파라미터받기
 		//2.비즈니스로직수행
-		CommunityDTO comDTO = communityService.communityDetail(comId);
+		CommunityDTO comDTO = communityService.communityDetailWithoutLike(comId);
+		
+		if(!comDTO.getMemberId().equals(principal.getName())){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
+		}
 		model.addAttribute("comDTO", comDTO);
 		//4.view
 		return "/community/communityReWriteView";
 	}
 	
+	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/community/communityReWriteView/{comId}")
-	public String communityReWriteViewPost(@PathVariable("comId") Integer comId, Model model) {
-	    CommunityDTO comDTO = communityService.communityDetail(comId);
-	    model.addAttribute("comDTO", comDTO);
-	    return "community/communityReWriteView";
+	public String communityReWriteViewPost(@PathVariable("comId") Integer comId, Model model,Principal principal) {
+	    
+		CommunityDTO comDTO = communityService.communityDetailWithoutLike(comId);
+		
+		if(!comDTO.getMemberId().equals(principal.getName())){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
+		}
+		model.addAttribute("comDTO", comDTO);
+		//4.view
+		return "/community/communityReWriteView";
 	}
 	
 	//글 수정
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/community/communityReWrite/{comId}")
 	public String communityUpdate(@ModelAttribute CommunityDTO comDTO,
             @RequestParam("comFile") MultipartFile[] comFiles,
             @RequestParam("comImgSname") String comImgSname,
             @RequestParam("comImgPath") String comImgPath,
-            @PathVariable("comId") Integer comId){
-		
+            @RequestParam("placeLat") String placeLat,
+            @RequestParam("placeLong") String placeLong,
+            @RequestParam("placeName") String placeName,
+            @PathVariable("comId") Integer comId,
+            Principal principal){
+		 System.out.println(placeLat+placeLong);
+		if(!comDTO.getMemberId().equals(principal.getName())){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
+		}
+		comDTO.setPlaceLat(placeLat);   
+		comDTO.setPlaceLong(placeLong);  
+		comDTO.setPlaceName(placeName);   
 		comDTO.setComImgSname(comImgSname);
 	    comDTO.setComImgPath(comImgPath);
-	    System.out.println(comId);
-
+	    
 	    // 파일 업로드 처리
 	    if (comFiles != null && comFiles.length > 0 && !comFiles[0].isEmpty()) {
 	        MultipartFile comFile = comFiles[0];
@@ -202,7 +304,6 @@ public class ComController {
 	        comDTO.setComImgSname(comImgSname);   
 
 	    }
-	       
 	    comDTO.setComId(comId);
 	    communityService.communityReWrite(comDTO);
 	    return "redirect:/exhibitscape/community/communityDetail/" + comDTO.getComId();
@@ -210,16 +311,43 @@ public class ComController {
 	
 	
 	//글 상세페이지
-		@GetMapping("/community/communityDetail/{comId}")
-		public String communityDetail(@PathVariable("comId") Integer comId,Model model){
-			//1.파라미터받기
-			//2.비즈니스로직수행
-			CommunityDTO comDTO = communityService.communityDetail(comId);
-			model.addAttribute("comDTO", comDTO);
-			//System.out.println(comDTO.getCommentList().toString());
-			//4.view
-			return "/community/communityDetailView";
-		}
+	@GetMapping("/community/communityDetail/{comId}")
+	public String communityDetail(@PathVariable("comId") Integer comId, Model model, Principal principal) {
+	    // 1. 파라미터 받기
+	    // 2. 비즈니스 로직 수행
+	    CommunityDTO comDTO;
+	    if (principal != null) {
+	        String memberId = principal.getName();
+	        MemberDomain memberDomain = memberDetailsService.getUser(memberId);
+	        comDTO = communityService.communityDetailWithLike(comId, memberDomain);
+	    } else {
+	        comDTO = communityService.communityDetailWithoutLike(comId);
+	    }
+	    
+	    System.out.println(comDTO);
+	    model.addAttribute("comDTO", comDTO);
+	    
+	    // 4. view
+	    return "/community/communityDetailView";
+	}
+		
 	
-
+	//삭제처리
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/delete/{comId}")
+	public String communityDelete(@PathVariable("comId") Integer comId,Principal principal) {
+		
+		String memberId = principal.getName();
+		MemberDomain memberDomain = memberDetailsService.getUser(memberId);
+		CommunityDTO comDTO = communityService.getCommunityDetails(comId, memberDomain);
+		
+		if(!comDTO.getMemberId().equals(principal.getName())){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제 권한이 없습니다.");
+		}
+		
+		communityService.delete(comDTO);
+		
+		return "redirect:/exhibitscape/community/communityList";
+	}
+	
 }

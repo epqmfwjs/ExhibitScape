@@ -8,7 +8,12 @@
         <ul>
             <li><a href="/gallery/">Gallery</a></li>
             <li><a href="/exhibitscape/community/communityList">Community</a></li>
-            <li><a href="/myPage">Mypage</a></li>
+			<li sec:authorize="hasRole('ROLE_ADMIN')">
+			<a href="/admin/list">Mypage</a>
+			</li>
+			<li sec:authorize="hasRole('ROLE_USER')">
+			<a href="/myPage">Mypage</a>
+			</li>
             <li><a href="/chatList">ChatRooms</a></li>
         </ul>
     </div>
@@ -43,12 +48,13 @@ header {
     display: flex; /* Flexbox 사용 */
     align-items: center; /* 수직 가운데 정렬 */
     justify-content: space-between; /* 좌우 정렬 */
+        overflow: hidden;
 }
 
 /* 로고 스타일 설정. 로고를 왼쪽으로 이동 */
 .logo {
     padding: 10px 20px; /* 패딩 설정 */
-    margin-left: 240px; /* 왼쪽에 마진을 추가하여 위치 조정 */
+    margin-left: 65px; /* 왼쪽에 마진을 추가하여 위치 조정 */
 }
 
 .logo a {
@@ -58,8 +64,9 @@ header {
     }
 
 .logo-image {
-  width: 130px;
+  width: 165px;
   height: auto;
+  margin-top: 8px;
 }
 
 /* 네비게이션 스타일 설정 */
@@ -67,7 +74,8 @@ header {
     flex-grow: 1; /* 네비게이션이 로고와 로그인 사이에 위치하도록 설정 */
     display: flex; /* Flexbox 사용 */
     align-items: center; /* 수직 가운데 정렬 */
-    justify-content: center; /* 가운데 정렬 */
+    justify-content: flex-start; /* 가운데 정렬 */
+    margin-left: 30px;
 }
 
 .main-nav ul {

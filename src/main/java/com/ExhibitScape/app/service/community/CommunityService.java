@@ -2,11 +2,13 @@ package com.ExhibitScape.app.service.community;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ExhibitScape.app.common.DataNotException;
-import com.ExhibitScape.app.domain.community.ComCommentRepository;
+import com.ExhibitScape.app.domain.community.ComLike;
+import com.ExhibitScape.app.domain.community.ComLikeRepository;
 import com.ExhibitScape.app.domain.community.Community;
 import com.ExhibitScape.app.domain.community.CommunityRepository;
+import com.ExhibitScape.app.domain.member.MemberDomain;
 import com.ExhibitScape.app.dto.community.CommunityDTO;
 
 @Service("CommunityService")
@@ -29,7 +33,7 @@ public class CommunityService {
 	private CommunityRepository communityRepository;
 	
 	@Autowired
-	private ComCommentRepository commentRepository;
+	private ComLikeRepository comLikeRepository;
 	
 	//카테고라이징
 	public Page<Community> findAllCommunities(Pageable pageable) {
@@ -39,6 +43,78 @@ public class CommunityService {
     public Page<Community> findCommunitiesByCategory(String category, Pageable pageable) {
     	return communityRepository.findByComCategoryContainingOrderByPostDateDesc(category, pageable);
     }
+    
+    
+    //좋아요
+    
+    public CommunityDTO getCommunityDetails(Integer comId, MemberDomain memberDomain) {
+        Community community = communityRepository.findById(comId)
+                .orElseThrow(() -> new IllegalArgumentException("Community not found with id: " + comId));
+
+        CommunityDTO communityDTO = new CommunityDTO();
+        
+        // CommunityDTO에 필요한 필드 설정
+        communityDTO.setComId(community.getComId());
+        communityDTO.setMemberId(community.getMemberId());
+        communityDTO.setComTitle(community.getComTitle());
+        communityDTO.setComContent(community.getComContent());
+        communityDTO.setPostDate(community.getPostDate());
+        communityDTO.setComImgSname(community.getComImgSname());
+        communityDTO.setComImgPath(community.getComImgPath());
+        communityDTO.setComCategory(community.getComCategory());
+        communityDTO.setComHits(community.getComHits());
+        communityDTO.setComTag(community.getComTag());
+        communityDTO.setCommentList(community.getCommentList());
+        
+     // 좋아요 정보 설정
+        boolean liked = comLikeRepository.existsByCommunityAndMemberDomain(community, memberDomain);
+        int likeCount = comLikeRepository.countByCommunity(community);
+        communityDTO.setLiked(liked);
+        communityDTO.setLikeCount(likeCount);
+
+        return communityDTO;
+    }
+    
+    public boolean toggleComLike(Integer comId, MemberDomain memberDomain) {
+        Community community = communityRepository.findById(comId)
+                .orElseThrow(() -> new IllegalArgumentException("Community not found with id: " + comId));
+
+        Optional<ComLike> optionalComLike = comLikeRepository.findByCommunityAndMemberDomain(community, memberDomain);
+
+        if (optionalComLike.isPresent()) {
+            ComLike comLike = optionalComLike.get();
+            comLikeRepository.delete(comLike);
+            community.setLiked(false);
+            communityRepository.save(community);
+            return false;
+        } else {
+            ComLike comLike = new ComLike();
+            comLike.setCommunity(community);
+            comLike.setMemberDomain(memberDomain);
+            comLike.setComLikeCheck(true);
+            comLikeRepository.save(comLike);            
+            community.setLiked(true);
+            communityRepository.save(community);
+            
+            return true;
+        }
+    }
+    
+    public int getLikeCount(Integer comId) {
+        Community community = communityRepository.findById(comId)
+                .orElseThrow(() -> new IllegalArgumentException("Community not found with id: " + comId));
+        int likeCount=comLikeRepository.countByCommunity(community);
+        community.setLikeCount(likeCount);
+        communityRepository.save(community);
+        return likeCount;
+    }
+    
+   
+  	
+  	//삭제처리
+  	public void delete(CommunityDTO communityDTO) {
+  		communityRepository.deleteById(communityDTO.getComId());
+  	}
 	
 	//페이징처리 목록조회
 	//매개변수 : 주의! 스프링부트의 Jpa의 페이지시작번호는 0부터 시작한다. 1아니다.
@@ -68,6 +144,10 @@ public class CommunityService {
 		community.setComCategory(communityDTO.getComCategory());
 		community.setComHits(communityDTO.getComHits());
 		community.setComTag(communityDTO.getComTag());
+		community.setPlaceLat(communityDTO.getPlaceLat());
+		community.setPlaceLong(communityDTO.getPlaceLong());
+		community.setPlaceName(communityDTO.getPlaceName());
+		
 
 		communityRepository.save(community);
 	}
@@ -85,6 +165,9 @@ public class CommunityService {
 		community.setComCategory(communityDTO.getComCategory());
 		community.setComHits(communityDTO.getComHits());
 		community.setComTag(communityDTO.getComTag());
+		community.setPlaceLat(communityDTO.getPlaceLat());
+		community.setPlaceLong(communityDTO.getPlaceLong());
+		community.setPlaceName(communityDTO.getPlaceName());
 
 		communityRepository.save(community);
 	}
@@ -115,27 +198,60 @@ public class CommunityService {
 
 		return comDTOList;
 	}
+	
+	public List<Integer> findLikedCommunityIds(String memberId) {
+	    // memberId를 사용하여 해당 사용자가 좋아요를 누른 게시물의 ID 목록을 조회하는 로직 구현
+	     List<ComLike> comLikes = comLikeRepository.findByMemberDomain_memberId(memberId);
+	     
+	     List<Integer> likedCommunityIds = comLikes.stream()
+	             .map(comLike -> comLike.getCommunity().getComId())
+	             .collect(Collectors.toList());
+	     
+	     return likedCommunityIds;
+	}
 
 	
 	// 글 상세조회
-	public CommunityDTO communityDetail(Integer comId){
-		Optional<Community> oCommunity = communityRepository.findById(comId);
-		if(oCommunity.isPresent()) {
-			
-			Community com = oCommunity.get();
-			CommunityDTO communityDTO = convertDTO(com);
-			
-			return communityDTO;
-			
-		}else {	
-			throw new DataNotException("question not found");
-		}
-		
+	public CommunityDTO communityDetailWithLike(Integer comId, MemberDomain memberDomain) {
+	    Optional<Community> oCommunity = communityRepository.findById(comId);
+	    if (oCommunity.isPresent()) {
+	        Community com = oCommunity.get();
+	        CommunityDTO communityDTO = convertDTO(com);
+
+	        // 좋아요 정보 설정
+	        boolean liked = false;
+	        int likeCount = comLikeRepository.countByCommunity(com);
+	        
+	        if (memberDomain != null) {
+	            // 로그인한 사용자인 경우에만 좋아요 정보 설정
+	            liked = comLikeRepository.existsByCommunityAndMemberDomain(com, memberDomain);
+	        }
+	        
+	        communityDTO.setLiked(liked);
+	        communityDTO.setLikeCount(likeCount);
+	        
+	        return communityDTO;
+	    } else {
+	        throw new DataNotException("question not found");
+	    }
 	}
+	
+	public CommunityDTO communityDetailWithoutLike(Integer comId) {
+	    Optional<Community> oCommunity = communityRepository.findById(comId);
+	    if (oCommunity.isPresent()) {
+	        Community com = oCommunity.get();
+	        CommunityDTO communityDTO = convertDTO(com);
 
-// 글수정
-
-// 글삭제
+	        // 좋아요 정보 설정
+	        int likeCount = comLikeRepository.countByCommunity(com);
+	        
+	        communityDTO.setLiked(false);
+	        communityDTO.setLikeCount(likeCount);
+	        return communityDTO;
+	    } else {
+	        throw new DataNotException("question not found");
+	    }
+	}
 	
 	private CommunityDTO convertDTO(Community community) {
 		CommunityDTO dTo = new CommunityDTO();
@@ -151,6 +267,9 @@ public class CommunityService {
 		dTo.setComHits(community.getComHits());
 		dTo.setComTag(community.getComTag());
 		dTo.setCommentList(community.getCommentList());
+		dTo.setPlaceLat(community.getPlaceLat());
+		dTo.setPlaceLong(community.getPlaceLong());
+		dTo.setPlaceName(community.getPlaceName());
 		
 		return dTo;
 	}
@@ -172,8 +291,26 @@ public class CommunityService {
 		
 		return folderPath;
 	}
-	
-	
+
+	//희경추가
+    public List<Community> getUserCommunity(String memberId) {
+        return communityRepository.findByMemberId(memberId);
+    }
+    
+    public int getTotalCount() {
+        return (int) communityRepository.count();
+    }
+    
+    public Map<String, Integer> getBoardCountsByDate() {
+        List<Object[]> result = communityRepository.getBoardCountsByDate();
+        Map<String, Integer> boardCountsByDate = new HashMap<>();
+        for (Object[] row : result) {
+            String date = (String) row[0];
+            int count = ((Long) row[1]).intValue();
+            boardCountsByDate.put(date, count);
+        }
+        return boardCountsByDate;
+    }
 	
 	
 }

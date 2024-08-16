@@ -1,5 +1,7 @@
 body {
-	font-family: Arial, sans-serif; /* 폰트 설정 */
+	font-family: "Noto Sans KR", sans-serif;
+  	font-optical-sizing: auto;
+  	font-style: normal;
 	margin: 0;
 	padding: 0;
 	/*background-color: #f4f4f4;  배경색 설정 */

@@ -3,14 +3,109 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>전시상황</title>
+    <link rel="stylesheet" href="/css/member/myPage.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:inline="javascript">
+    $(document).ready(function() {
+        $(".submit-btn").click(function(e) {
+            e.preventDefault();
+            var form = $(this).closest("form");
+            var inputField = form.find("input[type='text'], input[type='email']");
+            var inputValue = inputField.val();
+            var inputName = inputField.attr("name");
 
+            if (inputField.data("duplicate-checked")) {
+                form.submit();
+            } else {
+                alert(inputName + " 중복 체크를 먼저 해주세요.");
+            }
+        });
+
+        $(".duplicate-check").click(function() {
+            var inputField = $(this).siblings("input");
+            var inputValue = inputField.val();
+            var inputName = inputField.attr("name");
+
+            $.ajax({
+                url: "/myPage/checkDuplicate",
+                type: "POST",
+                data: {
+                    field: inputName,
+                    value: inputValue
+                },
+                success: function(response) {
+                    if (response) {
+                        alert("사용 가능한 " + inputName + "입니다.");
+                        inputField.data("duplicate-checked", true);
+                    } else {
+                        alert("중복된 " + inputName + "입니다.");
+                        inputField.data("duplicate-checked", false);
+                    }
+                },
+                error: function() {
+                    alert("중복 체크 중 오류가 발생했습니다.");
+                }
+            });
+        });
+
+        $(".member-delete").click(function() {
+            if (confirm("확인을 누르시면 회원탈퇴됩니다")) {
+                window.location.href = "/memberDelete";
+            } else {
+                return false;
+            }
+        });
+    });
+</script>
 </head>
 <body>
 <div layout:fragment="content">
-
-
+    <div class="category-image"></div>
+    <div class="content-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/myPage">회원정보 조회 및 수정</a></li>
+                <li><a href="/myPage/changePassword">비밀번호 변경</a></li>
+                <li><a href="/memberDelete" class="member-delete">회원 탈퇴</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>회원정보 조회 및 수정</h2>
+            <form>
+            <div class="3form">
+                <div class="form-row">
+                    <div class="form-group text-center">
+                        <label for="memberId">ID</label>
+                        <input type="text" id="memberId" th:value="${member.memberId}" readonly>
+                    </div>
+                </div>
+               
+                <div class="form-row">
+    <div class="form-group text-center">
+        <label for="nickname">Nickname</label>
+        <form th:action="@{/myPage/updateNickname}" method="post" class="nickname-form">
+            <input type="text" id="nickname" name="nickname" th:value="${member.nickname}" required>
+            <button type="button" class="duplicate-check">중복 체크</button>
+            <button type="submit" class="submit-btn">수정</button>
+        </form>
+    </div>
+</div>
+                <div class="form-row">
+                    <div class="form-group text-center">
+                        <label for="email">Email</label>
+                        <form th:action="@{/myPage/updateEmail}" method="post" class="email-form">
+                            <input type="email" id="email" name="email" th:value="${member.email}" required>
+                            <button type="button" class="duplicate-check">중복 체크</button>
+                            <button type="submit" class ="submit-btn">수정</button>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

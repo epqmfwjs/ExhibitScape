@@ -1,31 +1,311 @@
 @charset "UTF-8";
 
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+}
+
+
+/*배너 공통*/
 #banner {
-    width: 100%;
-    text-align: center;
-    margin-top: 60px;
-}
-
-.gallery-item {
-	display: inline-block;
-	margin: 10px;
+	width: 100%;
 	text-align: center;
+	margin-top: 60px;
 }
 
-.gallery-image {
-	width: 200px;
-	height: 200px;
-	object-fit: cover;
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+
+img {
+    width: 100%; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+}
+/* 글쓰기 버튼 스타일 */
+.write-button-container {
+    text-align: right;
+   	margin-right: 30px; /* 왼쪽으로 100px 이동 */
+   	margin-top: 10px;
+}
+.write-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px); /* 살짝 위로 올림 */
+}
+
+.write-button:hover {
+    background-color:  #4CAF50;;
+    transform: translateY(-4px); /* 호버 시 더 위로 올림 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    animation: color-shift 0.5s infinite alternate; /* 색상 변경 애니메이션 */
+}
+
+/* 검색 창 스타일 */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* 검색 창 및 카테고리 선택창에 그림자 효과 추가 */
+form select,
+form input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* 테두리 색상과 그림자의 전환 효과 추가 */
+}
+
+/* 검색창 내용 입력 중 또는 카테고리 선택 중일 때의 효과 */
+form select:focus,
+form input[type="text"]:focus {
+    border-color: #00E4B2; /* 테두리 색상 변경 */
+    box-shadow: 0 0 0 3px rgba(0, 228, 178, 0.3); /* 테두리에 그림자 효과 추가 */
+}
+
+/* 검색 버튼 스타일 */
+form button {
+    padding: 8px 18px;
+    background-color:  #4CAF50;;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px); /* 살짝 위로 올림 */
+    cursor: pointer;
+    border: none;
+}
+
+form button:hover {
+    background-color:  #4CAF50;;
+    transform: translateY(-4px); /* 호버 시 더 위로 올림 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    animation: color-shift 0.5s infinite alternate; /* 색상 변경 애니메이션 */
+}
+
+@keyframes color-shift {
+    0% {
+        background-color: #00E4B2;
+    }
+    100% {
+        background-color: #00c79d;
+    }
+}
+
+/* 카테고리 버튼 스타일 */
+.category-button-container {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    margin-left : 30px;
 }
 
 .category-button {
-	margin-right: 10px;
-	padding: 5px 10px;
-	background-color: #f1f1f1;
-	border: none;
-	cursor: pointer;
+    padding: 10px 20px;
+    margin: 5px;
+    border: 1px solid #ccc; /* 회색 계열의 테두리선 추가 */
+    background-color: white; /* 평소 배경색을 흰색으로 설정 */
+    color: black; /* 텍스트 색상을 검정으로 설정 */
+    border-radius: 0; /* 둥근 테두리 제거 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* 테두리 색상과 배경색의 전환 효과 추가 */
 }
 
-.category-button.active {
-	background-color: #ddd;
+.category-button.active,
+.category-button:hover {
+    background-color: #00E4B2; /* 마우스를 가져다 대면 배경색 변경 */
+    border-color: #00E4B2; /* 마우스를 가져다 대면 테두리 색상 변경 */
+    font-weight: bold; /* 마우스를 가져다 대면 글씨체 bold로 변경 */
+}
+
+/* 날짜 선택기 스타일 */
+.date-picker-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.date-picker-container input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    width: 200px;
+    text-align: center;
+}
+
+/* 갤러리 스타일 */
+#galleryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.gallery-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: 300px; /* 너비를 늘려 이미지를 더 크게 표시 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.gallery-item:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.gallery-image {
+    width: 100%;
+    height: auto; /* 이미지가 비율에 맞게 조정되도록 설정 */
+    border-radius: 4px;
+    transition: filter 0.3s ease;
+}
+
+.gallery-image:hover {
+    animation: brightness-animation 0.5s infinite alternate; /* 지속 시간을 0.5초로 설정하여 깜박이는 속도 증가 */
+}
+
+@keyframes brightness-animation {
+    0% {
+        filter: brightness(1.2);
+    }
+    100% {
+        filter: brightness(0.8);
+    }
+}
+
+.gallery-item p {
+    margin: 10px 0;
+}
+
+.gallery-item p span {
+    font-weight: bold;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    list-style: none;
+}
+
+.pagination .page-item {
+    margin: 0 0.25rem;
+}
+
+.pagination .page-item a {
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #00c79d;
+    border-radius: 0.25rem;
+    color: #00c79d;
+    text-decoration: none;
+    background-color: #fff;
+    font-size: 0.875rem; /* Smaller font size */
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.pagination .page-item a:hover {
+    background-color: #e6f7f5;
+    border-color: #00c79d;
+}
+
+.pagination .page-item.active a {
+    background-color: #00c79d;
+    border-color: #00c79d;
+    color: #fff;
+}
+
+.pagination .page-item.disabled a {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: default;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item a:before {
+    content: "❤️";
+}
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  position: relative; /* 말풍선 스타일을 위한 부모 요소 위치 설정 */
+  flex-direction: column;
+}
+
+.data-picker-box {
+	width: 500px;
+	display: flex;
+}
+
+.date-picker-container input[type="text"] {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 500px; /* 최대 너비를 500px로 제한 */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 10px; /* 달력 아이콘과의 간격 추가 */
+}
+
+.calendar-icon {
+  font-size: 20px;
+  color: #555;
+}
+
+.date-picker-text {
+  font-size: 14px;
+  color: #F06292;
+  margin-left: 10px;
+  position: relative;
+  top: 5px; /* 입력 필드 바로 아래 위치 */
+  left: 0; /* 입력 필드와 동일한 위치 */
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  white-space: nowrap; /* 텍스트가 한 줄에 나오도록 설정 */
+}
+
+.date-picker-text::before {
+  content: "";
+  position: absolute;
+  top: -10px; /* 말풍선 꼬리 위치 */
+  left: 20px; /* 말풍선 꼬기 위치 */
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent #ccc transparent;
+}
+
+.date-picker-text::after {
+  content: "";
+  position: absolute;
+  top: -8px; /* 말풍선 꼬리 위치 */
+  left: 21px; /* 말풍선 꼬리 위치 */
+  border-width: 0 9px 9px 9px;
+  border-style: solid;
+  border-color: transparent transparent #f9f9f9 transparent;
 }

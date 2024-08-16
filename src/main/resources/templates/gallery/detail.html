@@ -1,188 +1,222 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/default}">
 <head>
 <meta charset="UTF-8">
 <head>
-<title>detail</title>
+<title>전시상황</title>
 <!-- jquery cdn -->
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"
 	integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
 	crossorigin="anonymous"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- 다음지도 -->
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript"
+   src="{APPKEY}"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
+	rel="stylesheet">
 <link rel="stylesheet" href="/css/gallery/detail.css">
 
 </head>
 <body>
-<div layout:fragment="content">
-<div id="banner">
- 	<img src="/image/gallery/gallery.png" alt="배너 이미지">
-</div>
-	<table>
-		<tr>
-			<th>id</th>
-			<td th:text="${gallery.galId}"></td>
-		</tr>
-		<tr>
-			<th>title</th>
-			<td th:text="${gallery.galTitle}"></td>
-		</tr>
-		<tr>
-			<th>기간</th>
-			<td th:text="${gallery.galPeriod}"></td>
-		</tr>
-		<tr>
-			<th>Location</th>
-			<td th:text="${gallery.galLocation}"></td>
-		</tr>
-		<tr>
-			<th>주소</th>
-			<td th:text="${gallery.galAddress}"></td>
-		</tr>
-		<tr>
-			<th>장르</th>
-			<td th:text="${gallery.galGenre}"></td>
-		</tr>
-		<tr>
-			<th>date</th>
-			<td
-				th:text="${#temporals.format(gallery.galPostDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-		</tr>
-		<tr>
-			<th>hits</th>
-			<td th:text="${gallery.galHits}"></td>
-		</tr>
-		<tr>
-			<th>contents</th>
-			<td th:text="${gallery.galInfo}"></td>
-		</tr>
-		<!--  한개 파일		
-		<tr th:if="${gallery.fileAttached == 1}">
-			<th>image</th>
-			<td><img th:src="@{|/upload/${gallery.galImgSfile}|}" alt="image" multiple></td>
-		</tr>
-		-->
-		<tr
-			th:if="${gallery.fileAttached == 1 and gallery.galImgSfile != null and !gallery.galImgSfile.isEmpty()}">
-			<th>images</th>
-			<td>
-				<div th:each="filename : ${gallery.galImgSfile}">
-					<img th:src="@{|/upload/${filename}|}"
-						style="width: 200px; height: auto;" alt="이미지">
-				</div>
-			</td>
-		</tr>
-	</table>
-
-	<!-- 버튼들 -->
-	<div>
-		<button id="list-btn">목록</button>
-		<button id="update-btn">수정</button>
-		<button id="delete-btn">삭제</button>
-	</div>
-
-	<!-- 좋아요 추가 -->
-
-	<div id="gallery-like">
-		<button id="like-btn"
-			th:attr="data-gallery-id=${gallery.galId}, data-member-id=${currentMemberId}">
-			<span id="like-icon" class="empty-heart">&#x2661;</span>
-			<!-- 빈 하트 아이콘 -->
-		</button>
-		<button id="dislike-btn"
-			th:attr="data-gallery-id=${gallery.galId}, data-member-id=${currentMemberId}">
-			<span id="dislike-icon" class="empty-heart">&#x2661;</span>
-			<!-- 빈 하트 아이콘 -->
-		</button>
-		<span id="total-count" th:text="${totalLikes}">0</span>
-		<!-- 좋아요와 싫어요를 합한 숫자를 표시할 요소 -->
-	</div>
-
-	<!-- 댓글 작성 부분 -->
-	<div id="comment-write">
-		<input type="hidden" id="galId" th:value="${gallery.galId}"> <input
-			type="text" id="memberId" placeholder="작성자">
-		<textarea id="galComContent" placeholder="내용"></textarea>
-		<button id="comment-write-btn">댓글작성</button>
-	</div>
-
-	<!-- 댓글 출력 부분 -->
-	<div id="comment-list">
-		<div class="comment-item" th:each="comment: ${commentList}">
-			<div class="comment-id" th:text="${comment.id}"></div>
-			<div class="comment-writer" th:text="${comment.memberId}"></div>
-			<div class="comment-content" th:text="${comment.galComContent}"></div>
-			<div class="comment-time"
-				th:text="${#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
-			<button class="comment-update-btn"
-				th:attr="data-comment-id=${comment.id}">수정</button>
-			<button class="comment-delete-btn"
-				th:attr="data-comment-id=${comment.id}">삭제</button>
+	<div layout:fragment="content">
+		<div id="banner">
+			<img src="/image/gallery/gallery.png" alt="배너 이미지">
 		</div>
-	</div>
 
+		<div class="detail-container">
+			<div class="item">
+				<div class="header">번호:</div>
+				<div th:text="${gallery.galId}"></div>
+			</div>
 
-<script th:inline="javascript">
-document.addEventListener("DOMContentLoaded", () => {
-	  const galId = document.getElementById("galId").value;
+			<div class="item">
+				<div class="header">제목:</div>
+				<div th:text="${gallery.galTitle}"></div>
+			</div>
 
-	  const commentWrite = () => {
-	    const writer = document.getElementById("memberId").value;
-	    const contents = document.getElementById("galComContent").value;
+			<div class="item">
+				<div class="header">기간:</div>
+				<div th:text="${gallery.galPeriod}"></div>
+			</div>
 
-	    $.ajax({
-	      type: "POST",
-	      url: "/comment/save",
-	      data: {
-	        "memberId": writer,
-	        "galComContent": contents,
-	        "galId": galId
-	      },
-	      success: function (data) {
-	        updateCommentList(data);
-	        document.getElementById("memberId").value = '';
-	        document.getElementById("galComContent").value = '';
-	      },
-	      error: function (err) {
-	        console.log("요청실패", err);
-	      }
-	    });
-	  }
+			<div class="item">
+				<div class="header">장소:</div>
+				<div th:text="${gallery.galLocation}"></div>
+			</div>
+
+			<div class="item">
+				<div class="header">주소:</div>
+				<div th:text="${gallery.galAddress}"></div>
+			</div>
+
+			<div class="item">
+				<div class="header">장르:</div>
+				<div th:text="${gallery.galGenre}"></div>
+			</div>
+
+			<div class="item">
+				<div class="header">작성일:</div>
+				<div
+					th:text="${#temporals.format(gallery.galPostDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+			</div>
+
+			<div class="item">
+				<div class="header">조회수:</div>
+				<div th:text="${gallery.galHits}"></div>
+			</div>
+
+			<div class="item">
+				<div class="header">내용:</div>
+				<div th:utext="${gallery.galInfo}"></div>
+			</div>
+			<div class="item">
+				<div class="header">전시 관련 사진:</div>
+				<div
+					th:if="${gallery.fileAttached == 1 and gallery.galImgSfile != null and !gallery.galImgSfile.isEmpty()}">
+					<div th:each="filename : ${gallery.galImgSfile}">
+						<img th:src="@{|/upload/${filename}|}"
+							style="width: 400px; height: 400px;" alt="이미지">
+					</div>
+				</div>
+			</div>
+			<div class="item">
+			<div class="header">위치:</div>
+			<div id="galAddress"
+				style="width: 400px; height: 400px; margin-top: 10px;"></div>
+		</div>
+
+		</div>
+
+		<!-- 버튼들 -->
+		<div class="button-container">
+		    <button id="list-btn" class="action-button">
+		        <i class="fas fa-list"></i> 목록
+		    </button>
+		    <th:block th:if="${isAuthor}">
+		        <button id="update-btn" class="action-button">
+		            <i class="fas fa-edit"></i> 수정
+		        </button>
+		        <button id="delete-btn" class="action-button">
+		            <i class="fas fa-trash-alt"></i> 삭제
+		        </button>
+		    </th:block>
+		</div>
+
+		<!-- 댓글 작성 부분 -->
+		<div id="comment-write">
+			<input type="hidden" id="galId" th:value="${gallery.galId}">
+			<input type="hidden" id="memberId" th:value="${memberId}" placeholder="작성자">
+			<textarea id="galComContent" maxlength="1000" placeholder="당신의 소중한 댓글을 입력해주세요."></textarea>
+			<button id="comment-write-btn">댓글작성</button>
+		</div>
+
+		<!-- 댓글 출력 부분 -->
+		<div id="comment-list">
+			<div class="comment-item" th:each="comment: ${commentList}">
+				<div class="comment-id" th:text="${comment.id}"></div>
+				<div class="comment-writer" th:text="${comment.memberId}"></div>
+				<div class="comment-content" th:text="${comment.galComContent}"></div>
+				<div class="comment-time"
+					th:text="${#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+			    <th:block th:if="${#authentication.name == comment.memberId}">
+			      <button class="comment-update-btn" th:attr="data-comment-id=${comment.id}">수정</button>
+			      <button class="comment-delete-btn" th:attr="data-comment-id=${comment.id}">삭제</button>
+			    </th:block>
+			</div>
+		</div>
+
+		<script th:inline="javascript">
+		document.addEventListener("DOMContentLoaded", () => {
+		    const galId = document.getElementById("galId").value;
+		    const memberId = document.getElementById('memberId').value;
+
+		    const commentWrite = () => {
+		        const contents = document.getElementById("galComContent").value;
+
+		        if (!memberId) {
+		            alert("로그인이 필요합니다.");
+		            return;
+		        }
+
+		        $.ajax({
+		            type: "POST",
+		            url: "/comment/save",
+		            data: {
+		                "galComContent": contents,
+		                "galId": galId
+		            },
+		            headers: {
+		                "Content-Type": "application/x-www-form-urlencoded"
+		            },
+		            success: function (data) {
+		                updateCommentList(data, memberId);
+		                document.getElementById("galComContent").value = '';
+		            },
+		            error: function (err) {
+		                console.log("요청실패", err);
+		            }
+		        });
+		    }
+	  const updateCommentContent = (commentId, newContent) => {
+		  $.ajax({
+		    type: "PUT",
+		    url: "/comment/update/" + commentId,
+		    data: JSON.stringify({ galComContent: newContent }),
+		    contentType: "application/json; charset=utf-8",
+		    success: function (data) {
+		      updateCommentList(data);
+		      location.reload(); // 페이지 새로고침
+
+		    },
+		    error: function (err) {
+		      console.log("수정 실패", err);
+		    }
+		  });
+		}
 
 	  const updateCommentList = (data) => {
-	    let output = "";
-	    for (let i = 0; i < data.length; i++) {
-	      output += `
-	        <div class="comment-item">
-	          <div class="comment-id">${data[i].id}</div>
-	          <div class="comment-writer">${data[i].memberId}</div>
-	          <div class="comment-content">${data[i].galComContent}</div>
-	          <div class="comment-time">${new Date(data[i].commentCreatedTime).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</div>
-	          <button class="comment-update-btn" data-comment-id="${data[i].id}">수정</button>
-	          <button class="comment-delete-btn" data-comment-id="${data[i].id}">삭제</button>
-	        </div>
-	      `;
-	    }
-	    document.getElementById('comment-list').innerHTML = output;
+		  let output = "";
+		  for (let i = 0; i < data.length; i++) {
+		    output += `
+		      <div class="comment-item">
+		        <div class="comment-id">${data[i].id}</div>
+		        <div class="comment-writer">${data[i].memberId}</div>
+		        <div class="comment-content">${data[i].galComContent}</div>
+		        <div class="comment-time">${new Date(data[i].commentCreatedTime).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</div>
+		        ${data[i].memberId === memberId ? `
+		          <button class="comment-update-btn" data-comment-id="${data[i].id}">수정</button>
+		          <button class="comment-delete-btn" data-comment-id="${data[i].id}">삭제</button>
+		        ` : ''}
+		      </div>
+		    `;
+		  }
+		  document.getElementById('comment-list').innerHTML = output;
 
-	    // 수정 버튼 클릭 이벤트 처리
-	    const updateButtons = document.querySelectorAll('.comment-update-btn');
-	    updateButtons.forEach(button => {
-	      button.addEventListener('click', (event) => {
-	        const commentId = event.target.dataset.commentId;
-	        updateComment(commentId);
-	      });
-	    });
+		  // 수정 버튼 클릭 이벤트 처리
+		  const updateButtons = document.querySelectorAll('.comment-update-btn');
+		  updateButtons.forEach(button => {
+		    button.addEventListener('click', (event) => {
+		      const commentId = event.target.dataset.commentId;
+		      updateComment(commentId);
+		    });
+		  });
 
-	    // 삭제 버튼 클릭 이벤트 처리
-	    const deleteButtons = document.querySelectorAll('.comment-delete-btn');
-	    deleteButtons.forEach(button => {
-	      button.addEventListener('click', (event) => {
-	        const commentId = event.target.dataset.commentId;
-	        deleteComment(commentId);
-	      });
-	    });
-	  }
+		  // 삭제 버튼 클릭 이벤트 처리
+		  const deleteButtons = document.querySelectorAll('.comment-delete-btn');
+		  deleteButtons.forEach(button => {
+		    button.addEventListener('click', (event) => {
+		      const commentId = event.target.dataset.commentId;
+		      deleteComment(commentId);
+		    });
+		  });
+		}
 
 	  const updateComment = (commentId) => {
 	    $.ajax({
@@ -196,21 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	      },
 	      error: function (err) {
 	        console.log("댓글 가져오기 실패", err);
-	      }
-	    });
-	  }
-
-	  const updateCommentContent = (commentId, newContent) => {
-	    $.ajax({
-	      type: "PUT",
-	      url: "/comment/update/" + commentId,
-	      data: JSON.stringify({ galComContent: newContent }),
-	      contentType: "application/json; charset=utf-8",
-	      success: function (data) {
-	        updateCommentList(data);
-	      },
-	      error: function (err) {
-	        console.log("수정 실패", err);
 	      }
 	    });
 	  }
@@ -229,60 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	      });
 	    }
 	  }
-	    const likeBtn = document.getElementById("like-btn");
-	    const dislikeBtn = document.getElementById("dislike-btn");
-	    let likeValue = parseInt([[${likeCount}]]);
-	    let dislikeValue = parseInt([[${dislikeCount}]]);
-	    
-	 	// 좋아요 및 싫어요 수를 업데이트하는 함수
-	   	const updateCounts = () => {
-	    const totalCountElement = document.getElementById("total-count");
-		const likeCountElement = document.getElementById("like-count");
-	    const dislikeCountElement = document.getElementById("dislike-count");
-
-	      if (totalCountElement && likeCountElement && dislikeCountElement) {
-	        totalCountElement.textContent = likeValue + dislikeValue;
-	        likeCountElement.textContent = likeValue;
-	        dislikeCountElement.textContent = dislikeValue;
-	      } else {
-	        console.log("요소를 찾을 수 없습니다.");
-	      }
-	    };
-	    
-	    // 좋아요 버튼 클릭 이벤트
-	    likeBtn.addEventListener("click", () => {
-	      likeValue += 1; // 좋아요 수 증가
-	      updateCounts(); // UI 업데이트
-	      sendCountsToServer(); // 서버로 전송
-	    });
-
-	    // 싫어요 버튼 클릭 이벤트
-	    dislikeBtn.addEventListener("click", () => {
-	      dislikeValue += 1; // 싫어요 수 증가
-	      updateCounts(); // UI 업데이트
-	      sendCountsToServer(); // 서버로 전송
-	    });
-
-	    // 서버로 좋아요 및 싫어요 수를 전송하는 함수
-	    const sendCountsToServer = () => {
-	      $.ajax({
-	        type: "POST",
-	        url: "/update-like-dislike",
-	        data: {
-	          "likeCount": likeValue,
-	          "dislikeCount": dislikeValue
-	        },
-	        success: function(data) {
-	          // 성공 시 추가적인 작업 수행
-	        },
-	        error: function(err) {
-	          console.log("서버와의 통신 실패", err);
-	        }
-	      });
-	    };
-
-	    // 초기 좋아요 및 싫어요 수를 UI에 반영
-	    updateCounts();
 	  
 	  document.getElementById("comment-write-btn").addEventListener("click", commentWrite);
 
@@ -294,22 +259,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	  const updateReq = () => {
 	    console.log("수정 요청");
-	    const id = [[${gallery.galId}]];
+//	    const id = [[${gallery.galId}]];
 	    location.href = "/gallery/update/" + id;
 	  }
 	  document.getElementById("update-btn").addEventListener("click", updateReq);
 
 	  const deleteReq = () => {
 	    console.log("삭제 요청");
-	    const id = [[${gallery.galId}]];
+//	    const id = [[${gallery.galId}]];
 	    location.href = "/gallery/delete/" + id;
 	  }
 	  document.getElementById("delete-btn").addEventListener("click", deleteReq);
 
 	  // 댓글 목록 초기 로딩
-	  updateCommentList([[${commentList}]]);
+//	  updateCommentList([[${commentList}]]);
 	});
+	
+// 추천 버튼 클릭 이벤트 처리
+$('#recommend-btn').click(function() {
+    const url = $(this).data('uri');
+    $.ajax({
+        type: 'POST',
+        url: url,
+        success: function(response) {
+            $('#recommend-count').text(response);
+        },
+        error: function(err) {
+            console.log('추천 요청 실패', err);
+        }
+    });
+});
+
+
+//var address = [[${gallery.galAddress}]]
+var mapContainer = document.getElementById('galAddress'),
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch(address, function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">전시상황 목적지</div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});   
+
+
+
 </script>
-</div>
+		<script src="/js/gallery/detail.js"></script>
+
+	</div>
 </body>
 </html>

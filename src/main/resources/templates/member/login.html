@@ -2,18 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ExhibitScape login</title>
-    <link rel="stylesheet" type="text/css"
-	th:href="@{/css/member/loginCss.css}">
+    <title>전시상황</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/member/loginCss.css}">
+
+    <script th:inline="javascript">
+        function validateLogin() {
+            var memberId = document.getElementById("memberId").value;
+            var password = document.getElementById("password").value;
+
+            if (memberId.trim() === "" || password.trim() === "") {
+                alert("아이디 및 비밀번호를 입력해주세요.");
+                return false;
+            }
+
+            return true; // 폼 제출 허용
+        }
+
+        function openFindPasswordModal() {
+            document.getElementById("findPasswordModal").style.display = "block";
+        }
+
+        function closeFindPasswordModal() {
+            document.getElementById("findPasswordModal").style.display = "none";
+        }
+
+        function findPassword() {
+            var memberId = document.getElementById("findPasswordId").value;
+            var email = document.getElementById("findPasswordEmail").value;
+
+            fetch("/member/checkMemberInfo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ memberId: memberId, email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    // 일치하는 경우 /sendEmail 경로로 이동
+                    window.location.href = "/sendEmail";
+                } else {
+                    alert("입력한 정보와 일치하는 회원이 없습니다.");
+                    closeFindPasswordModal();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                closeFindPasswordModal();
+            });
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div th:if="${message}" th:text="${message}" class="alert"></div>
+
     <div class="login-container">
-        <a href="/" class="logo-link">
+        <a href="/scheduleBoard/list" class="logo-link">
             <div class="logo">
-                <img src="./image/member/loginlogo.png" alt="ExhibitScape Logo">
+                <img src="./image/member/logo.png" alt="ExhibitScape Logo">
             </div>
         </a>
-        <form action="/loginProc" method="post" name="loginForm">
+        <form action="/loginProc" method="post" name="loginForm" onsubmit="return validateLogin()">
             <div class="input-group">
                 <input id="memberId" type="text" name="memberId" placeholder="id" />
             </div>
@@ -23,11 +76,24 @@
             <input type="submit" value="Login" />
         </form>
         <div class="additional-links">
-           
+            <a href="/scheduleBoard/list">메인으로</a>
+            <a href="#" onclick="openFindPasswordModal()">비밀번호 찾기</a>
             <a href="/join">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- 비밀번호 찾기 모달창 -->
+    <div id="findPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFindPasswordModal()">&times;</span>
+            <h2>비밀번호 찾기</h2>
+            <div>
+                <input type="text" id="findPasswordId" placeholder="아이디를 입력하세요" required>
+                <input type="email" id="findPasswordEmail" placeholder="이메일을 입력하세요" required>
+                <button onclick="findPassword()">임시 비밀번호 발송</button>
+            </div>
         </div>
     </div>
 
 </body>
 </html>
-

@@ -2,11 +2,16 @@ package com.ExhibitScape.app.service.gallery;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +19,7 @@ import com.ExhibitScape.app.domain.gallery.GalleryEntity;
 import com.ExhibitScape.app.domain.gallery.GalleryFileEntity;
 import com.ExhibitScape.app.domain.gallery.GalleryFileRepository;
 import com.ExhibitScape.app.domain.gallery.GalleryRepository;
+import com.ExhibitScape.app.domain.member.MemberDomain;
 import com.ExhibitScape.app.dto.gallery.GalleryDTO;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +31,7 @@ public class GalleryService {
 
 	private final GalleryRepository galleryRepository;
 	private final GalleryFileRepository galleryFileRepository;
+	private final GalCommentService galCommentService;
 
 	public void save(GalleryDTO galleryDTO) throws IOException {
 	    if (galleryDTO.getGalleryFile() == null || galleryDTO.getGalleryFile().isEmpty()) {
@@ -52,45 +59,58 @@ public class GalleryService {
 		}
 	}
 
-	@Transactional
-	public List<GalleryDTO> findAll() {
-		List<GalleryEntity> galleryEntityList = galleryRepository.findAll();
-		List<GalleryDTO> galleryDTOList = new ArrayList<>();
-		for (GalleryEntity galleryEntity : galleryEntityList) {
-			galleryDTOList.add(GalleryDTO.toGalleryDTO(galleryEntity));
-		}
-		return galleryDTOList;
-	}
+//	@Transactional
+//	public List<GalleryDTO> findAll() {
+//		List<GalleryEntity> galleryEntityList = galleryRepository.findAll();
+//		List<GalleryDTO> galleryDTOList = new ArrayList<>();
+//		for (GalleryEntity galleryEntity : galleryEntityList) {
+//			galleryDTOList.add(GalleryDTO.toGalleryDTO(galleryEntity));
+//		}
+//		return galleryDTOList;
+//	}
 
+	@Transactional
+	public Page<GalleryDTO> findAll(Pageable pageable) {
+	    Page<GalleryEntity> galleryEntityPage = galleryRepository.findAll(pageable);
+	    return galleryEntityPage.map(GalleryDTO::toGalleryDTO);
+	}
+	
+	@Transactional
+	public Page<GalleryDTO> search(String searchOption, String searchWord, Pageable pageable) {
+	    Page<GalleryEntity> galleryEntities;
+
+	    switch (searchOption) {
+	        case "title":
+	            galleryEntities = galleryRepository.findByGalTitleContaining(searchWord, pageable);
+	            break;
+	        case "location":
+	            galleryEntities = galleryRepository.findByGalLocationContaining(searchWord, pageable);
+	            break;
+	        case "address":
+	            galleryEntities = galleryRepository.findByGalAddressContaining(searchWord, pageable);
+	            break;
+	        default:
+	            galleryEntities = galleryRepository.findAll(pageable);
+	            break;
+	    }
+
+	    return galleryEntities.map(GalleryDTO::toGalleryDTO);
+	}
+	
 	@Transactional
 	public void updateHits(Long id) {
 		galleryRepository.updateHits(id);
 	}
 
-//	@Transactional
-//	public GalleryDTO findById(Long id) {
-//		Optional<GalleryEntity> optionalGalleryEntity = galleryRepository.findById(id);
-//		if (optionalGalleryEntity.isPresent()) {
-//			GalleryEntity galleryEntity = optionalGalleryEntity.get();
-//			GalleryDTO galleryDTO = GalleryDTO.toGalleryDTO(galleryEntity);
-//			return galleryDTO;
-//		} else {
-//			return null;
-//		}
-//	}
-
 	@Transactional
 	public GalleryDTO findById(Long id) {
-		GalleryEntity galleryEntity = galleryRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid gallery ID: " + id));
-		return GalleryDTO.toGalleryDTO(galleryEntity);
+	    GalleryEntity galleryEntity = galleryRepository.findById(id)
+	            .orElseThrow(() -> new IllegalArgumentException("Invalid gallery ID: " + id));
+	    GalleryDTO galleryDTO = GalleryDTO.toGalleryDTO(galleryEntity);
+	    galleryDTO.setMemberId(galleryEntity.getMemberId());
+	    return galleryDTO;
 	}
 
-//	public GalleryDTO update(GalleryDTO galleryDTO) {
-//		GalleryEntity galleryEntity = GalleryEntity.toUpdateEntity(galleryDTO);
-//		galleryRepository.save(galleryEntity);
-//		return findById(galleryDTO.getGalId());
-//	}
 	public GalleryDTO update(GalleryDTO galleryDTO) throws IOException {
 		GalleryEntity galleryEntity = galleryRepository.findById(galleryDTO.getGalId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid gallery ID: " + galleryDTO.getGalId()));
@@ -130,17 +150,7 @@ public class GalleryService {
 		galleryRepository.deleteById(id);
 	}
 
-//	public Page<GalleryDTO> paging(Pageable pageable) {
-//		int page = pageable.getPageNumber() - 1;
-//        int pageLimit = 5; // 한 페이지에 보여줄 글 갯수
-//        Page<GalleryEntity> galleryEntities =
-//                galleryRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-//	
-//        Page<GalleryDTO> galleryDTOs = galleryEntities.map(gallery -> new GalleryDTO(gallery.getGalId(), gallery.getGalTitle(), gallery.getGalLocation(), gallery.getGalAddress(), 
-//        		gallery.getCreatedTime(), gallery.getGalHits()));
-//        return galleryDTOs;
-//	}
-
+	
 	@Transactional
 	public List<GalleryDTO> search(String searchOption, String searchWord) {
 		List<GalleryEntity> galleryEntities;
@@ -181,8 +191,21 @@ public class GalleryService {
 		 */
 	}
 
-	public List<GalleryEntity> searchGalleryByDateRange(String startDate, String endDate) {
-	    return galleryRepository.findByGalPeriodBetween(startDate, endDate);
+	public List<GalleryDTO> searchByDateRange(String startDateRange, String endDateRange) {
+	    List<GalleryEntity> galleryEntities = galleryRepository.findByGalPeriodBetween(startDateRange, endDateRange);
+	    return galleryEntities.stream()
+	            .map(GalleryDTO::toGalleryDTO)
+	            .collect(Collectors.toList());
 	}
-   
+	
+//	@Transactional
+//	public Page<GalleryDTO> searchByDateRange(String startDateRange, String endDateRange, Pageable pageable) {
+//	    Page<GalleryEntity> galleryEntities = galleryRepository.findByGalPeriodBetween(startDateRange, endDateRange, pageable);
+//	    return galleryEntities.map(GalleryDTO::toGalleryDTO);
+//	}
+	
+	//admin관련 추가
+    public int getTotalCount() {
+        return (int) galleryRepository.count();
+    }
 }

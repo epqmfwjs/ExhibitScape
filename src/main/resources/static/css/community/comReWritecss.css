@@ -1,0 +1,163 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  margin: 0;
+  background-color: #fff;
+}
+
+.category-image {
+  width: 100%;
+  height: 210px; /* 원하는 높이로 조정 */
+  background-image: url('/image/community/community.png'); /* 이미지 경로 설정 */
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 50px;
+  margin-top: 60px;
+}
+
+
+.write-form {
+	width: 80%;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #fff;
+}
+
+.write-group {
+	margin: 0 auto;
+}
+
+.form-group {
+	margin-bottom: 15px;
+	
+}
+
+.form-group label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 5px;
+	margin-left: 50px;
+}
+
+.form-group input[type="text"] {
+	width: 90%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-left: 50px;
+	
+}
+
+.form-group select {
+	width: 20%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-left: 50px;
+}
+
+.form-group textarea {
+	width: 90%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	resize: vertical; /* 수직 방향으로만 크기 조절 가능 */
+	margin-left: 50px;
+}
+
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center; /* 버튼 높이 맞추기 */
+	margin-right: 70px;
+	margin-bottom: 30px;
+}
+
+.submit-group input[type="submit"] {
+	margin-right:10px;
+	padding: 6px 16px;
+	background-color: black;
+	border: 1px solid black;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+}
+
+.submit-group input[type="submit"]:hover {
+	opacity: 0.8;
+}
+
+.submit-group a{
+	margin-right:10px;
+	padding: 8px 16px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.submit-group a:hover {
+	background-color: #f0f0f0;
+}
+
+.submit-group a:visited {
+  color: #333; /* 방문한 링크 색상을 검은색으로 설정 */
+}
+
+.file-group {
+	margin-left: 50px;
+}
+
+.preview {
+    max-width: 300px; /* 최대 너비 */
+    max-height: 200px; /* 최대 높이 */
+    display: block; /* 이미지를 블록 요소로 만들어 가운데 정렬 */
+    margin: 0 auto; /* 가운데 정렬 */
+}
+
+.item-image {
+  width: 88.5%;
+  text-align: center;
+  margin-left:50px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+
+}
+
+.item-image img {
+    max-width: 300px; /* 최대 너비 */
+    max-height: 600px; /* 최대 높이 */
+    display: block; /* 이미지를 블록 요소로 만들어 가운데 정렬 */
+    margin: 0 auto; /* 가운데 정렬 */
+    
+}
+
+.img-update-btn{
+	display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 50px;
+}
+
+.file-label{
+	margin-right: 10px;
+	padding: 5px 10px;
+    background-color: #fff;
+    color: #515151;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size:13px;
+	
+}
+.file-label:hover {
+  opacity: 0.8;
+  background-color: #f0f0f0;
+}

@@ -24,10 +24,12 @@ public class ComCommentService {
 
 	
 	//댓글 등록 처리 
-	public ComCommentDTO commentwrite(CommunityDTO communityDTO,String comContent) {
+	public ComCommentDTO commentwrite(CommunityDTO communityDTO,String comContent,String memberId,String randomImageFileName) {
 		ComComment comment = new ComComment();
 		comment.setComContent(comContent); //답변 내용
-		System.out.println(comContent);
+		comment.setMemberId(memberId); //답변 아이디
+		comment.setImgRandom(randomImageFileName);//랜덤이미지
+		
 		Community community = new Community();
 		community.setComId(communityDTO.getComId());
 		community.setMemberId(communityDTO.getMemberId());
@@ -70,16 +72,30 @@ public class ComCommentService {
 		
 		comment.setComContent(comContent); //답변 내용
 		ComComment updateComment = comCommentRepository.save(comment);
-		return convertDTO(updateComment);
+		ComCommentDTO comCommentDTO = convertDTO(updateComment);
+		System.out.println(comCommentDTO);
+		return comCommentDTO;
 	}
 	
+	//댓글 삭제 처리 
+	//댓글 수정 처리
+	public void delete(Integer comComId) {
+		//댓글 조회 및 예외 발생
+		ComComment comment = comCommentRepository.findById(comComId)
+							.orElseThrow(() -> new IllegalArgumentException("Invalid comment ID: " + comComId));
+		
+		comCommentRepository.delete(comment);
+	}
+	
+	//DTO로 변환
 	private ComCommentDTO convertDTO(ComComment comComment) {
 		ComCommentDTO dTo = new ComCommentDTO();
 		
 		dTo.setComComId(comComment.getComComId());
 		dTo.setMemberId(comComment.getMemberId());
 		dTo.setComContent(comComment.getComContent());
-		dTo.setComId(comComment.getComId());
+		dTo.setComId(comComment.getComId().getComId());
+		dTo.setImgRandom(comComment.getImgRandom());
 		
 		// postDate를 원하는 형식으로 변환하여 설정
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

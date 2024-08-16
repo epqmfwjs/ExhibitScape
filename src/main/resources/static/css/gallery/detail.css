@@ -1,7 +1,198 @@
 @charset "UTF-8";
 
-#banner {
-    width: 100%;
-    text-align: center;
-    margin-top: 60px;
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
+
+#banner {
+  width: 100%;
+  text-align: center;
+  margin-top: 60px;
+}
+
+img {
+    width: 100%; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+}
+#banner img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 상세 정보 컨테이너 */
+.detail-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd; /* 테두리 추가 */
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+}
+
+/* 각 항목 스타일 */
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd; /* 테두리 추가 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.item .header {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* 마우스를 가져다댔을 때 배경색 변경 */
+.item:hover {
+  background-color: #F9FBE7;
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  background-color: #00E4B2; /* 버튼 배경색 */
+  color: #fff; /* 버튼 텍스트 색상 */
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#comment-write {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd; /* 테두리 추가 */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#comment-write input[type="text"],
+#comment-write textarea {
+  width: calc(100% - 22px);
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+#comment-write button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#comment-write button:hover {
+  background-color: #45a049;
+}
+
+.comment-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-id {
+  display: none;
+}
+
+.comment-writer {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.comment-content {
+  margin-bottom: 5px;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.comment-update-btn,
+.comment-delete-btn {
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 12px;
+}
+
+.comment-update-btn:hover {
+  background-color: #ec971f;
+}
+
+.comment-delete-btn {
+  background-color: #d9534f;
+}
+
+.comment-delete-btn:hover {
+  background-color: #c9302c;
+}
+
+/* Like and dislike button styles */
+#gallery-like {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+#gallery-like button {
+  padding: 10px;
+  background-color: #ff4081;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+#gallery-like button:hover {
+  background-color: #f50057;
+}
+
+#gallery-like #like-icon,
+#gallery-like #dislike-icon {
+  font-size: 24px;
+}
+
+#gallery-like #total-count {
+  font-size: 18px;
+  color: #333;
+  margin-left: 10px;
+}
+
+#total-count {
+  margin-left: 5px;
+}
+

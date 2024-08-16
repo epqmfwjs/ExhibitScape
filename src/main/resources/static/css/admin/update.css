@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+
+/*배너 공통*/
+#banner {
+	width: 100%;
+	text-align: center;
+	margin-top: 60px;
+	position: relative; /* 상대 위치 지정 */
+}
+
+#banner img {
+	max-width: 100%;
+	height: auto;
+	
+}
+img {
+    width: 100%; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+}
+form {
+	max-width: 400px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+input[type="submit"] {
+	width: 100%;
+	padding: 10px;
+	margin-top: 10px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+.button-container {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.button {
+	margin: 0 10px; /* 버튼 간격 조정 */
+	padding: 10px 20px;
+	background-color: #4CAF50;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.button:hover {
+	background-color: #45a049;
+}
+
+/* 서버에서 받은 데이터 스타일 */
+div.server-data {
+	text-align: center; /* 가운데 정렬 */
+}
+
+.server-data p {
+	font-weight: bold; /* 굵은 글씨 */
+}
+
+/* 게시글 수 그래프 컨테이너 스타일 */
+.container {
+	margin-top: 20px;
+	text-align: center;
+}
+
+/* 그래프 컨테이너 스타일 */
+.container {
+	margin-top: 20px;
+	display: flex; /* 그래프들을 가로로 배열하기 위해 Flexbox 사용 */
+	justify-content: space-around; /* 그래프들을 가운데 정렬하고 간격을 동일하게 설정 */
+}
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #fff;
+}
+
+a:active {
+	color: #4CAF50;
+}
+
+.fa {
+	margin-right: 5px; /* Font Awesome 아이콘 간격 조정 */
+}

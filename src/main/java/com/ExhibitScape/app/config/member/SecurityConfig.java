@@ -3,11 +3,12 @@ package com.ExhibitScape.app.config.member;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.ExhibitScape.app.controller.member.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -36,12 +37,19 @@ public class SecurityConfig {
         //.requestMatchers(HttpMethod.GET, "/resources/**").permitAll()
         
         
-        http
+       http
         		.formLogin((auth) -> auth.loginPage("/login")
         			.loginProcessingUrl("/loginProc").defaultSuccessUrl("/scheduleBoard/list")
         			.usernameParameter("memberId").permitAll()
         		 );	
 
+//		.formLogin((auth) -> auth.loginPage("/login")
+//			    .loginProcessingUrl("/loginProc")
+//			    .usernameParameter("memberId")
+//			    .successHandler(new CustomAuthenticationSuccessHandler())
+//			    .permitAll()
+//			);
+		
         http
         		.csrf((auth) -> auth.disable());
 
@@ -71,6 +79,8 @@ public class SecurityConfig {
          );
     	 
     	 return http.build();
+    	 
+    	 
 }
 	
 //	 public void configure(WebSecurity web) throws Exception {

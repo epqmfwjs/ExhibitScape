@@ -6,7 +6,10 @@
 <meta charset="UTF-8">
 <title>전시상황</title>
 <link rel="stylesheet" type="text/css"
-	th:href="@{/css/community/comWritecss.css}">
+	th:href="@{/css/community/comReWritecss.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gasoek+One&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100..900&family=Yeon+Sung&display=swap" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
@@ -34,18 +37,19 @@
 				<label for="comContent">글내용</label>
 				<textarea id="comContent" name="comContent" rows="20" th:text="${comDTO.comContent}" required></textarea>
 			</div>
-			<div>
+				<div><img class="preview" id="preview"/></div>
+			<div class="img-update-btn">
 				<!-- 수정 전 첨부파일 이름 hidden으로 보내주기 -->
 				<input type="hidden" name="comImgSname" th:value="${comDTO.comImgSname}">
 				<input type="hidden" name="comImgPath" th:value="${comDTO.comImgPath}">
+				<input type="hidden" name="memberId" th:value="${comDTO.memberId}">
+				<input type="hidden" name="placeLat" th:value="${comDTO.placeLat}">
+				<input type="hidden" name="placeLong" th:value="${comDTO.placeLong}">
+				<input type="hidden" name="placeName" th:value="${comDTO.placeName}">
     			<input type="file" id="comFile" name="comFile" multiple="multiple" accept="image/*" style="display: none;" onchange="readURL(this)"/>
    				<label for="comFile" class="file-label">사진 수정</label>
-   				<button type="button" id="deleteFile" class="delete-label" th:if="${comDTO.comImgSname != null and comDTO.comImgSname != ''}">사진 삭제</button>
-   				<span id="fileName" th:text="${comDTO.comImgSname != null and comDTO.comImgSname != ''} ? '현재 파일명 : ' + ${comDTO.comImgSname} : '첨부파일 없음'"></span>
-			</div>
-			<div>
-			<img id="preview"/>
-			</div>
+   				<button type="button" id="deleteFile" class="file-label" th:if="${comDTO.comImgSname != null and comDTO.comImgSname != ''}">사진 삭제</button>
+				<span id="fileName" th:data-original-name="${comDTO.comImgSname}" th:text="${comDTO.comImgSname != null and comDTO.comImgSname != ''} ? '현재 파일명 : ' + ${comDTO.comImgSname} : '첨부파일 없음'"></span>			</div>
 			<div class="button-group">
 				<div class="submit-group">
 					<input type="submit" value="수정">
@@ -60,24 +64,30 @@
 	
 <script>
 
-    document.getElementById('deleteFile').addEventListener('click', function() {
-        document.querySelector('input[name="comImgname"]').value = '';
-        document.querySelector('span').textContent = '';
-    });
+	  document.getElementById('deleteFile').addEventListener('click', function() {
+	  document.querySelector('input[name="comImgSname"]').value = '';
+	  document.getElementById('fileName').textContent = '첨부파일 없음';
+	});
     
-    function readURL(input){
-    	if(input.files && input.files[0]){
-    		var reader = new FileReader();
-    		reader.onload= function(e){
-    			document.getElementById('preview').src=e.target.result;
-    			document.getElementById('fileName').textContent = input.files[0].name; // 파일 이름 표시
-    		};
-    		reader.readAsDataURL(input.files[0]);
-    	}else{
-    		document.getElementById('preview').src="";
-    		document.getElementById('fileName').textContent = ""; // 파일 이름 초기화
-    	}
-    }
+	  function readURL(input) {
+		  if (input.files && input.files[0]) {
+		    var reader = new FileReader();
+		    reader.onload = function(e) {
+		      document.getElementById('preview').src = e.target.result;
+		      document.getElementById('fileName').textContent = '현재 파일명 : ' + input.files[0].name;
+		      document.getElementById('fileName').dataset.originalName = input.files[0].name;
+		    };
+		    reader.readAsDataURL(input.files[0]);
+		  } else {
+		    var originalName = document.getElementById('fileName').dataset.originalName;
+		    if (originalName) {
+		      document.getElementById('fileName').textContent = '현재 파일명 : ' + originalName;
+		    } else {
+		      document.getElementById('fileName').textContent = '첨부파일 없음';
+		    }
+		    document.getElementById('preview').src = "";
+		  }
+		}
 </script>		
 </div>
 </body>

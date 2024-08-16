@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+    <title>전시상황</title>
+    <link rel="stylesheet" href="/css/admin/update.css">    
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
+	rel="stylesheet">
+<!-- Font Awesome CDN 추가 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Bootstrap CSS 추가 -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="banner">
+			<img src="/image/admin/admin.png" alt="admin">
+		</div>
+		<br />
+
+		<!-- Button -->
+		<div class="button-container">
+			<!-- 대시보드 버튼에 아이콘 추가 -->
+			<a href="/admin/dashboard" class="btn btn-primary"><i
+				class="fas fa-tachometer-alt"></i> 대시보드</a>
+			<!-- 회원목록 버튼에 아이콘 추가 -->
+			<a href="/admin/list" class="btn btn-secondary"><i
+				class="fas fa-users"></i> 회원목록</a>
+		</div>
+		<br />
+
+<form action="/admin/update" method="post">
+  <input type="hidden" th:value="${updateMember.memberNo}" name="memberNo">
+ <input type="hidden" th:value="${updateMember.password}" name="password">
+  계정명: <input type="text" th:value="${updateMember.memberId}" name="memberId" readonly> <br/>
+  닉네임: <input type="text" th:value="${updateMember.nickname}" name="nickname"> <br/>
+  이메일: <input type="text" th:value="${updateMember.email}" name="email" readonly> <br/>
+  등급:
+  <!--<span th:if="${updateMember.role == 'ROLE_ADMIN'}">관리자</span>
+  <span th:if="${updateMember.role == 'ROLE_USER'}">유저</span>-->
+  <input type="text" th:value="${updateMember.role}" name="role" readonly>
+  <br/><br/>
+  <input type="submit" value="정보수정">
+</form>
+</div>
+</body>
+</html>

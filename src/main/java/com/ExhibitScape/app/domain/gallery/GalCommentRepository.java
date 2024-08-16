@@ -14,5 +14,6 @@ public interface GalCommentRepository extends JpaRepository<GalCommentEntity, Lo
 	GalCommentEntity save(GalCommentEntity galCommentEntity);
 
 	void deleteById(Long id);
+	
 
 }

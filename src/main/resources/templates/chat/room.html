@@ -2,10 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
+<linkhref="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 <head>
     <title>전시상황</title>
 <style>
 body{
+  	font-family: "Noto Sans KR", sans-serif;
+  	font-optical-sizing: auto;
+  	font-style: normal;
 	background-color: #f5f5f5;
 }
 #banner {
@@ -268,8 +272,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
             // WebSocket 연결 설정
-            var socket = new SockJS(`http://localhost:8085/ws/chat?roomId=${roomId}`);
-            //var socket = new SockJS(`http://172.30.1.69:8085/ws/chat?roomId=${roomId}`);
+            //var socket = new SockJS(`http://localhost:8085/ws/chat?roomId=${roomId}`);
+            var socket = new SockJS(`http://172.30.1.71:8085/ws/chat?roomId=${roomId}`);
             var stompClient = Stomp.over(socket);
 
             stompClient.connect({roomId: roomId}, function (frame) {
@@ -277,6 +281,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 stompClient.subscribe(`/topic/room/${roomId}`, function (message) {
                     showMessage(JSON.parse(message.body));
                 });
+				//뒤로가기방지
+				window.history.forward(1);
+			
+				window.addEventListener("beforeunload", function() {
+			    if (typeof stompClient !== 'undefined') {
+			        leaveChat(stompClient);
+			        console.log('뒤로가기 실행시 요걸로 커넥션열결이 끊길까?: ');
+			    }
+			});
 			
 			
             // 채팅방 입장 메시지 보내기
@@ -301,6 +314,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
 		
+
+		
+		//뒤로가기방지
+		window.history.forward(1);
 		
 		// HTML 태그 제거
     	content = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");

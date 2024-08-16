@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/default}">
+<head>
+<meta charset="UTF-8">
+<title>전시상황</title>
+<!-- Font Awesome CDN 추가 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Bootstrap CSS 추가 -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/admin/list.css">
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
+	rel="stylesheet">
+
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="banner">
+			<img src="/image/admin/admin.png" alt="admin">
+		</div>
+		<br />
+
+		<!-- Button -->
+		<div class="button-container">
+			<!-- 대시보드 버튼에 아이콘 추가 -->
+			<a href="/admin/dashboard" class="btn btn-primary"><i
+				class="fas fa-tachometer-alt"></i> 대시보드</a>
+			<!-- 회원목록 버튼에 아이콘 추가 -->
+			<a href="/admin/list" class="btn btn-secondary"><i
+				class="fas fa-users"></i> 회원목록</a>
+		</div>
+		<br />
+
+		<table border="1">
+			<tr>
+				<th>회원번호</th>
+				<th>계정명</th>
+				<th>닉네임</th>
+				<th>이메일</th>
+				<th>등급</th>
+				<th>수정</th>
+				<th>삭제</th>
+				<th>작성 게시글</th>
+			</tr>
+			<tr th:each="member: ${memberList}">
+				<td th:text="${member.MemberNo}"></td>
+				<td th:text="${member.memberId}"></td>
+				<td th:text="${member.nickname}"></td>
+				<td th:text="${member.email}"></td>
+				<td>
+				    <!-- 등급에 따라 출력 -->
+				    <span th:if="${member.role == 'ROLE_ADMIN'}">관리자</span>
+				    <span th:if="${member.role == 'ROLE_USER'}">유저</span>
+				</td>
+				<td><a th:href="@{|/admin/update/${member.memberNo}|}">수정</a></td>
+				<td><a th:href="@{|/admin/delete/${member.memberNo}|}">삭제</a></td>
+				<td>
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						th:data-target="'#userBoardModal-' + ${member.memberId}">
+						작성 게시글</button>
+				</td>
+			</tr>
+		</table>
+		<br /> <br />
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+		<!-- Modal -->
+		<div class="modal fade" th:each="member: ${memberList}"
+			th:id="'userBoardModal-' + ${member.memberId}" tabindex="-1"
+			role="dialog" aria-labelledby="userBoardModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"
+							th:id="'userBoardModalLabel-' + ${member.memberId}"
+							th:text="${member.memberId} + '의 작성 게시글'"></h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>게시글 번호</th>
+									<th>제목</th>
+									<th>작성자</th>
+									<th>작성 시간</th>
+								</tr>
+							</thead>
+							<tbody id="userBoardList-[[${member.memberId}]]">
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<script>
+$(document).ready(function() {
+    $(".btn-primary[data-target^='#userBoardModal-']").click(function() {
+        var memberId = $(this).data("target").replace("#userBoardModal-", "");
+        getUserCommunity(memberId);
+    });
+});
+
+function getUserCommunity(memberId) {
+    $.ajax({
+        type: "POST",
+        url: "/admin/getUserCommunity",
+        data: {
+            memberId: memberId
+        },
+        success: function(data) {
+            var tableBody = $("#userBoardList-" + memberId);
+            tableBody.empty();
+            $.each(data, function(index, community) {
+                var row = "<tr>" +
+                    "<td>" + community.comId + "</td>" +
+                    "<td>" + community.comTitle + "</td>" +
+                    "<td>" + community.memberId + "</td>" +
+                    "<td>" + community.postDate + "</td>" +
+                    "</tr>";
+                tableBody.append(row);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log("Error getting user community: " + error);
+        }
+    });
+}
+</script>
+	</div>
+
+</body>
+</html>

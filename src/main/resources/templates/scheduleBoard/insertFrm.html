@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>전시상황</title>
+<linkhref="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-	<h1>관리자 글등록 폼</h1>
+	<h1>愿�由ъ�� 湲��깅� ��</h1>
 <form action:"/scheduleBoard/insert" method="post">
-	제목 : <input type="text" name="title" id="title"><br/>
-	담당자 : <input type="text" name="master" id="master"><br/>
-	담당자 TEL : <input type="text" name="master_TEL" id="master_TEL"><br/>
-	담당자 E MAIL : <input type="text" name="master_EMAIL" id="master_EMAIL"><br/>
-	행사내용 : <input type="text" name="content"id="content"><br/>
-	행사입장료 : <input type="text" name="price"id="price"><br/>
-	행상시작일 : <input type="date" name="start_date" id="start_date"><br/>
-	행상종료일 : <input type="date" name="end_date" id="end_date"><br/>
-	행사장소 : <input type="text" name="place"id="place"><br/>
-	주최자 : <input type="text" name="organizers"id="organizers"><br/>
-	이미지주소 : <input type="text" name="imgOFile"id="imgOFile"><br/>
+	��紐� : <input type="text" name="title" id="title"><br/>
+	�대�뱀�� : <input type="text" name="master" id="master"><br/>
+	�대�뱀�� TEL : <input type="text" name="master_TEL" id="master_TEL"><br/>
+	�대�뱀�� E MAIL : <input type="text" name="master_EMAIL" id="master_EMAIL"><br/>
+	���щ�댁�� : <input type="text" name="content"id="content"><br/>
+	���ъ���λ� : <input type="text" name="price"id="price"><br/>
+	���������� : <input type="date" name="start_date" id="start_date"><br/>
+	����醫�猷��� : <input type="date" name="end_date" id="end_date"><br/>
+	���ъ�μ�� : <input type="text" name="place"id="place"><br/>
+	二쇱��� : <input type="text" name="organizers"id="organizers"><br/>
+	�대�몄�二쇱�� : <input type="text" name="imgOFile"id="imgOFile"><br/>
 	
-	<input type="submit" value="등록">
-	<input type="button" value="글목록" onclick="location.href='/scheduleBoard/list';"/>
+	<input type="submit" value="�깅�">
+	<input type="button" value="湲�紐⑸�" onclick="location.href='/scheduleBoard/list';"/>
 </form>
 	
 </body>

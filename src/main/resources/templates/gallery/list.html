@@ -1,165 +1,203 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/default}">
 <head>
 <meta charset="UTF-8">
-<title>갤러리</title>
+<title>전시상황</title>
 <script type="text/javascript"
 	src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript"
 	src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript"
 	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" type="text/css"
 	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	<link rel="stylesheet" href="/css/gallery/list.css">
-	
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/gallery/list.css">
+
 </head>
 <body>
-<div layout:fragment="content">
-<div id="banner">
- 	<img src="/image/gallery/gallery.png" alt="배너 이미지">
-</div>
-	<div>
-		<h1>갤러리 게시판</h1>
+	<div layout:fragment="content">
+		<div id="banner">
+			<img src="/image/gallery/gallery.png" alt="배너 이미지">
+		</div>
+		<div>
+			<!-- 글쓰기 작성 버튼 추가 -->
+			<div class="write-button-container"
+				th:if="${#authentication.principal != 'anonymousUser'}">
+				<a href="/gallery/save" class="write-button"> <i
+					class="fas fa-pencil-alt"></i> 글쓰기
+				</a>
+			</div>
+			<!-- 카테고리 버튼 추가 -->
+			<div class="category-button-container">
+				<button class="category-button" data-category="all">전체</button>
+				<button class="category-button" data-category="서울">서울</button>
+				<button class="category-button" data-category="경기">경기</button>
+				<button class="category-button" data-category="인천">인천</button>
+				<button class="category-button" data-category="강원">강원</button>
+				<button class="category-button" data-category="충청">충청</button>
+				<button class="category-button" data-category="전라">전라</button>
+				<button class="category-button" data-category="경상">경상</button>
+				<button class="category-button" data-category="제주">제주</button>
+			</div>
+			<!-- date-picker -->
+            <div class="date-picker-container">
+                <div class="data-picker-box"><i class="fas fa-calendar-alt calendar-icon"></i>
+                <input type="text" name="galPeriod"/></div>
+                <div class="date-picker-text">전시기간을 포함하는 기간을 검색하세요</div>
+            </div>
 
+			<div id="galleryContainer">
+				<!-- 서버에서 받은 갤러리 데이터가 여기에 동적으로 렌더링 -->
+				<div th:each="gallery: ${galleryList}" class="gallery-item">
+			<div th:if="${gallery.galImgSfile != null and !gallery.galImgSfile.isEmpty()}">
+			    <a th:href="@{|/gallery/${gallery.galId}|}"> 
+			        <img th:src="@{|/upload/${gallery.galImgSfile[0]}|}" alt="이미지" class="gallery-image">
+			    </a>
+			</div>
+					<p>
+						제목: <span th:text="${gallery.galTitle}"></span>
+					</p>
+					<p>
+						장소: <span th:text="${gallery.galLocation}"></span>
+					</p>
+					<p>
+						주소: <span th:text="${gallery.galAddress}"></span>
+					</p>
+					<p>
+						기간: <span th:text="${gallery.galPeriod}"></span>
+					</p>
+					<p>
+						조회수: <span th:text="${gallery.galHits}"></span>
+					</p>
+				</div>
+				<br />
+			</div>
+			
+			<div th:if="${!galleryList.isEmpty()}">
+				<ul class="pagination justify-content-center">
+					<li class="page-item"
+						th:classappend="${(currentPage ?: 1) == 1} ? 'disabled'"><a
+						class="page-link"
+						th:href="@{/gallery/(page=${(currentPage ?: 1) - 1})}">Previous</a>
+					</li>
+					<li class="page-item"
+						th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+						th:classappend="${(currentPage ?: 1) == pageNum} ? 'active'">
+						<a class="page-link" th:href="@{/gallery/(page=${pageNum})}"
+						th:text="${pageNum}"></a>
+					</li>
+					<li class="page-item"
+						th:classappend="${(currentPage ?: 1) == totalPages} ? 'disabled'">
+						<a class="page-link"
+						th:href="@{/gallery/(page=${(currentPage ?: 1) + 1})}">Next</a>
+					</li>
+				</ul>
+			</div>
+
+
+		</div>
 
 		<!-- 검색 창 추가 -->
-		<form th:action="@{/gallery/search}" method="get">
+		<form id="searchForm" th:action="@{/gallery/}" method="get">
 			<select name="searchOption">
 				<option value="title">제목</option>
 				<option value="address">주소</option>
 				<option value="location">장소</option>
 			</select> <input type="text" name="searchWord" placeholder="검색어를 입력하세요">
-			<button type="submit">검색</button>
+			<button type="submit">
+				<i class="fas fa-search"></i>
+				<!-- 검색 아이콘 추가 -->
+				검색
+			</button>
 		</form>
-		<br />
-		<!-- 카테고리 버튼 추가 -->
-		<div>
-			<button class="category-button" data-category="all">전체</button>
-			<button class="category-button" data-category="서울">서울</button>
-			<button class="category-button" data-category="경기">경기</button>
-			<button class="category-button" data-category="강원">강원</button>
-			<button class="category-button" data-category="충청">충청</button>
-			<button class="category-button" data-category="전라">전라</button>
-			<button class="category-button" data-category="경상">경상</button>
-			<button class="category-button" data-category="제주">제주</button>
-		</div>
-		<br />
 
 
-		<div class="date-picker-container">
-			<input type="text" name="galPeriod" />
-		</div>
+		<script>
+	    // 갤러리 아이템 필터링 함수
+	    function filterGalleryByCategory(category) {
+	        const galleryItems = document.querySelectorAll('.gallery-item');
+	        galleryItems.forEach(item => {
+	            const location = item.querySelector('p:nth-child(3) span').textContent;
+	            if (category === 'all' || location.includes(category)) {
+	                item.style.display = 'inline-block';
+	            } else {
+	                item.style.display = 'none';
+	            }
+	        });
+	
+	        // 선택된 카테고리 버튼에 active 클래스 추가
+	        const categoryButtons = document.querySelectorAll('.category-button');
+	        categoryButtons.forEach(button => {
+	            if (button.dataset.category === category) {
+	                button.classList.add('active');
+	            } else {
+	                button.classList.remove('active');
+	            }
+	        });
+	    }
+	
+	    // 카테고리 버튼 클릭 이벤트 처리
+	    document.addEventListener('DOMContentLoaded', () => {
+	        const categoryButtons = document.querySelectorAll('.category-button');
+	        categoryButtons.forEach(button => {
+	            button.addEventListener('click', () => {
+	                const category = button.dataset.category;
+	                filterGalleryByCategory(category);
+	            });
+	        });
+	    });
+	    
+		$(document).ready(function() {
+		    $('input[name="galPeriod"]').daterangepicker({
+		        opens: 'left', // 달력이 오른쪽에서 열리도록 설정
+		        locale: {
+		            format: 'MM/DD/YYYY', // 날짜 형식 지정
+		            applyLabel: '적용', // 적용 버튼 텍스트
+		            cancelLabel: '취소', // 취소 버튼 텍스트
+		            customRangeLabel: '사용자 정의', // 사용자 정의 범위 레이블
+		        }
+		    });
 
-		<div id="galleryContainer">
-			<!-- 서버에서 받은 갤러리 데이터가 여기에 동적으로 렌더링 -->
-			<div th:each="gallery: ${galleryList}" class="gallery-item">
-				<a th:href="@{|/gallery/${gallery.galId}|}">
-					<div
-						th:if="${gallery.galImgOfile != null and gallery.galImgOfile.size() > 0}">
-						<img th:src="@{|/upload/${gallery.galImgSfile[0]}|}" alt=""
-							class="gallery-image">
-					</div>
-		        	<div th:unless="${gallery.galImgOfile != null and gallery.galImgOfile.size() > 0}">
-	            <!-- 대체 이미지 경로 설정 -->
-	            <img src="/imgs/default.jpg" alt="대체이미지" class="gallery-image">
-	        		</div>
-				</a>
-				<p>
-					제목: <span th:text="${gallery.galTitle}"></span>
-				</p>
-				<p>
-					장소: <span th:text="${gallery.galLocation}"></span>
-				</p>
-				<p>
-					주소: <span th:text="${gallery.galAddress}"></span>
-				</p>
-				<p>
-					기간: <span th:text="${gallery.galPeriod}"></span>
-				</p>
-				<p>
-					조회수: <span th:text="${gallery.galHits}"></span>
-				</p>
-			</div>
-		</div>
-	</div>
+		    // 날짜 선택 적용 이벤트 처리
+		    $('input[name="galPeriod"]').on('apply.daterangepicker', function(ev, picker) {
+		        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		        let startDateRange = picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
+		        let endDateRange = picker.endDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY');
 
-	<script>
-    $(document).ready(function() {
-        // 날짜 선택 기능 초기화
-        $('input[name="galPeriod"]').daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                cancelLabel: 'Clear'
-            }
-        });
+		        // AJAX 요청으로 해당 기간에 해당하는 갤러리 가져오기
+		        $.ajax({
+		            type: 'GET',
+		            url: '/gallery/searchByDateRange',
+		            data: { startDateRange: startDateRange, endDateRange: endDateRange },
+		            success: function(data) {
+		                // 서버에서 받은 데이터로 갤러리 화면 갱신
+		                $('#galleryContainer').html(data);
+		            },
+		            error: function(xhr, status, error) {
+		                console.log('Error:', error);
+		                // 에러 처리 로직 추가
+		            }
+		        });
+		    });
 
-        // 날짜 선택 이벤트 처리
-        $('input[name="galPeriod"]').on('apply.daterangepicker', function(ev, picker) {
-            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+		    // 날짜 선택 취소 이벤트 처리
+		    $('input[name="galPeriod"]').on('cancel.daterangepicker', function(ev, picker) {
+		        $(this).val('');
+		    });
 
-            let startDate = picker.startDate.format('YYYY-MM-DD');
-            let endDate = picker.endDate.format('YYYY-MM-DD');
+		});
 
-            // AJAX 요청
-            $.ajax({
-                type: 'GET',
-                url: '/gallery/searchByDateRange',
-                data: { startDate: startDate, endDate: endDate },
-                success: function(data) {
-                    if (data) {
-                        // 서버에서 받은 데이터로 갤러리 화면 갱신
-                        $('#galleryContainer').html(data);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                    // 에러 처리 로직 추가
-                }
-            });
-        });
-
-        // 날짜 선택 취소 이벤트 처리
-        $('input[name="galPeriod"]').on('cancel.daterangepicker', function(ev, picker) {
-            $(this).val('');
-        });
-    });
-    // 갤러리 아이템 필터링 함수
-    function filterGalleryByCategory(category) {
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        galleryItems.forEach(item => {
-            const location = item.querySelector('p:nth-child(3) span').textContent;
-            if (category === 'all' || location.includes(category)) {
-                item.style.display = 'inline-block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        // 선택된 카테고리 버튼에 active 클래스 추가
-        const categoryButtons = document.querySelectorAll('.category-button');
-        categoryButtons.forEach(button => {
-            if (button.dataset.category === category) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        });
-    }
-
-    // 카테고리 버튼 클릭 이벤트 처리
-    document.addEventListener('DOMContentLoaded', () => {
-        const categoryButtons = document.querySelectorAll('.category-button');
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const category = button.dataset.category;
-                filterGalleryByCategory(category);
-            });
-        });
-    });
 </script>
-</div>
+	</div>
 </body>
 </html>

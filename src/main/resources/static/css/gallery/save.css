@@ -5,3 +5,119 @@
     text-align: center;
     margin-top: 60px;
 }
+
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+img {
+    width: 100%; /* 또는 원하는 너비 */
+    height: auto; /* 높이를 auto로 설정하여 비율 유지 */
+    object-fit: cover;
+}
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+/* 폼 스타일 */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* 라벨 스타일 */
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* 입력 필드 스타일 */
+form input[type="text"],
+form input[type="file"],
+form select,
+form textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form input[type="text"]:focus,
+form input[type="file"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #00E4B2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 228, 178, 0.5);
+}
+
+/* 제출 버튼 스타일 */
+form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #00E4B2;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #00c79d;
+}
+
+/* 기간 선택기 스타일 */
+.daterangepicker {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 파일 입력 필드 스타일 */
+form input[type="file"] {
+    padding: 3px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+form input[type="file"]::file-selector-button {
+    background-color: #00E4B2;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form input[type="file"]::file-selector-button:hover {
+    background-color: #00c79d;
+}
+
+
+/* 주소 검색 버튼 스타일 */
+form button[type="button"] {
+    padding: 5px 10px;
+    background-color: #00E4B2;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+form button[type="button"]:hover {
+    background-color: #00c79d;
+}

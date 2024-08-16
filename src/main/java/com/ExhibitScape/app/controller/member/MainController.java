@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ExhibitScape.app.dto.member.MemberDetails;
 import com.ExhibitScape.app.service.member.SecurityService;
@@ -22,17 +23,10 @@ public class MainController {
 	@Autowired
 	SecurityService SecurityService;
 	
-	@GetMapping("/")
-	public String mainP(Model model) {
+	@RequestMapping("/")
+	public String mainP() {
 		
 		
-	    
-	 // 사용자 아이디와 권한을 초기화
-	    String memberId=SecurityService.userId();
-	    String role=SecurityService.userGrade();
-	   
-	    model.addAttribute("memberId",memberId);
-	    model.addAttribute("role",role);
-		return "/member/main";
+		return "redirect:/scheduleBoard/list";
 	}
 }

@@ -2,7 +2,9 @@
 
 	
 body {
-    font-family: Arial, sans-serif; /* 폰트 설정 */
+    font-family: "Noto Sans KR", sans-serif;
+  	font-optical-sizing: auto;
+  	font-style: normal;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;  /*배경색 설정 */
@@ -16,7 +18,7 @@ body {
 }
 .sidebar {
     position: absolute;
-    top: 360px; /* 상단에 위치 */
+    top: 420px; /* 상단에 위치 */
     left: 0; /* 좌측에 위치 */
     width: 245px; /* 사이드바 폭 */
     height: 110%; /* 전체 높이 */

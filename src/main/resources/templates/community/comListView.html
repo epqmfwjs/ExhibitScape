@@ -8,6 +8,9 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/community/comListcss.css}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gasoek+One&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100..900&family=Yeon+Sung&display=swap" rel="stylesheet">
 </head>
 <body>
 <div layout:fragment="content">
@@ -36,10 +39,22 @@
 					<div class="title">
 						<a th:href="@{/exhibitscape/community/communityDetail/{comId}(comId=${community.comId})}" th:text="${community.comTitle}"></a>
 					</div>
+					<div class="content">
+						<a th:href="@{/exhibitscape/community/communityDetail/{comId}(comId=${community.comId})}" th:text="${community.comContent}"></a>
+					</div>
 					<div class="writer-info">
-						<span class="writer" th:text="${community.memberId}"></span> |&nbsp;&nbsp;
-						<span class="date" th:text="${#temporals.format(community.postDate, 'yyyy-MM-dd')}"></span> |&nbsp;&nbsp;
-						<span class="comment-count" th:text="'댓글 ' + ${community.commentList.size()}"></span>
+						<span class="writer" th:text="${community.memberId}"></span> |&nbsp;&nbsp;&nbsp;&nbsp;
+						<span class="date" th:text="${#temporals.format(community.postDate, 'yyyy-MM-dd')}"></span> |&nbsp;&nbsp;&nbsp;&nbsp;
+						<span class="comment-count" th:text="'댓글 ' + ${community.commentList.size()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;
+						<!-- 좋아요 구현 -->
+						<span class="like-info" th:if="${#authentication.principal != 'anonymousUser'}" th:onclick="'toggleLike(' + ${community.comId} + ')'">
+					        <img th:id="'heart-' + ${community.comId}" class="like-btn" th:src="${likedCommunity != null and #lists.contains(likedCommunity, community.comId) ? '/image/community/redheart.png' : '/image/community/emptyheart.png'}" alt="Like">
+					        <span th:id="'likeCount-' + ${community.comId}" class="like-count" th:text="${community.likeCount}"></span>
+					    </span>
+					    <span class="like-info" th:unless="${#authentication.principal != 'anonymousUser'}" th:onclick="showLoginAlert()">
+					        <img id="heart" class="like-btn" th:src="@{/image/community/emptyheart.png}" alt="Like">
+					        <span class="like-count" th:text="${community.likeCount}"></span>
+					    </span>
 					</div>
 			</div>
 			<div class="item-image" th:if="${community.comImgSname != null and community.comImgSname != ''}">
@@ -75,7 +90,6 @@
 	</div>
 </form>
 <script>
-
 //카테고리 버튼 클릭 이벤트 핸들러
 function filterByCategory(button) {
   var category = $(button).data('category');
@@ -101,6 +115,48 @@ function filterByCategory(button) {
   // URL 변경 (새로고침 없이)
   history.replaceState(null, null, currentUrl.toString());
 }
+
+// 로그인 없이 글쓰기 
+window.onload = function() {
+    var errorMessage = "[[${errorMessage}]]";
+    if (errorMessage && errorMessage !== "") {
+        alert(errorMessage);
+    }
+};
+
+
+//좋아요
+function toggleLike(comId) {
+$.ajax({
+    url: '/exhibitscape/community/' + comId + '/like',
+    type: 'POST',
+    success: function(response) {
+        // 좋아요 상태 업데이트
+        var heartImg = $('#heart-' + comId);
+        var likeCountSpan = $('#likeCount-' + comId);
+        
+        if (response.liked) {
+            heartImg.attr('src', '/image/community/redheart.png');
+        } else {
+            heartImg.attr('src', '/image/community/emptyheart.png');
+        }
+        
+        likeCountSpan.text(response.likeCount);
+    },
+    error: function(xhr, status, error) {
+        console.log('좋아요 토글 실패');
+        
+    }
+});
+}
+
+function showLoginAlert() {
+    var result = confirm("로그인 하셔야 이용할 수 있습니다. 로그인 페이지로 이동하시겠습니까?");
+    if (result) {
+        window.location.href = "/login"; // 로그인 페이지 URL로 변경해야 합니다.
+    }
+}
+
 </script>
 </div>
 </body>

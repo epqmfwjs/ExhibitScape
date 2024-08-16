@@ -1,9 +1,10 @@
 package com.ExhibitScape.app.domain.gallery;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import com.ExhibitScape.app.domain.member.MemberDomain;
 import com.ExhibitScape.app.dto.gallery.GalleryDTO;
 
 import jakarta.persistence.CascadeType;
@@ -13,6 +14,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -33,7 +37,7 @@ public class GalleryEntity extends BaseEntity {
 	@Column(nullable = false)
 	private String galTitle;
 
-	@Column(length = 1000)
+	@Column(length = 1000, nullable = false)
 	private String galInfo;
 
 	@Column
@@ -62,6 +66,10 @@ public class GalleryEntity extends BaseEntity {
 	
 	@OneToMany(mappedBy = "galleryEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<GalCommentEntity> galCommentEntityList = new ArrayList<>();
+	
+	@ManyToOne
+    @JoinColumn(name = "member_id")
+    private MemberDomain member;
 	
 	public GalleryEntity() {
 	}
