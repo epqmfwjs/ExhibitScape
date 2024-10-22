@@ -149,7 +149,7 @@ input[type="submit"]:hover {
     width: 350px; /* 또는 원하는 너비 */
     height: auto; /* 높이를 auto로 설정하여 비율 유지 */
     object-fit: cover;
-    margin: 0px 410px; /* 마진 */
+    margin-left: 140%; /* 마진 */
     margin-bottom: 290px;
 }
 
