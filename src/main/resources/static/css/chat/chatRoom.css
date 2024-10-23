@@ -1,0 +1,191 @@
+body{
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    background-color: #f5f5f5;
+}
+#banner {
+    width: 100%;
+    text-align: center;
+    margin-top: 60px; /* 헤더의 높이만큼 여백 추가 */
+}
+#banner img {
+    max-width: 100%;
+    height: auto;
+}
+.container {
+    display: grid;
+    grid-template-columns: 1.5fr 0.5fr;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    height: 600px; /* 세로 크기 늘리기 */
+}
+
+.left-area {
+    display: grid;
+    grid-template-rows: 1fr auto; /* 상단 영역은 남은 공간을 모두 차지하고, 하단 영역은 자동 높이로 설정 */
+    gap: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgb(128, 128, 128);
+    height: 95%; /* 왼쪽 영역 높이를 95%로 설정 */
+    margin-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box; /* 패딩과 테두리를 높이 계산에 포함 */
+}
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* 예시로 200px에서 50px로 변경하여 인풋 영역의 세로 길이를 줄임 */
+}
+
+.input-area input[type="text"] {
+    flex-grow: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    background-color: rgb(19, 216, 3);
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.input-area button:hover {
+    background-color: rgb(0, 255, 0);
+}
+
+.leave {
+    background-color: transparent; /* 배경색 투명 */
+    padding: 10px 20px;
+    color: rgb(0, 0, 0); /* 텍스트 색상 */
+    border: 0.5px solid gray; /* 테두리 색상과 두께 설정 */
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    min-width: 150px;
+    margin-bottom:10px;
+
+}
+
+.leave:hover {
+    background-color: #c82333;
+}
+
+.right-area {
+    display: grid;
+    grid-template-rows: 1fr auto; /* 상단 영역은 남은 공간을 모두 차지하고, 하단 영역은 자동 높이로 설정 */
+    gap: 10px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgb(128, 128, 128);
+    height: 95%; /* 왼쪽 영역 높이를 95%로 설정 */
+    margin-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box; /* 패딩과 테두리를 높이 계산에 포함 */
+}
+.chat-area {
+    flex-grow: 1;
+
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* 채팅 영역에 스크롤바 생성 */
+}
+
+.message {
+    position: relative;
+    display: inline-block;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    max-width: 70%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.message-sent {
+    align-self: flex-end; /* 보낸 메시지를 오른쪽에 정렬 */
+    color: #333;
+    text-align: right;
+    background-color: #fee79d1f;
+    margin-right: 15px;
+    border-top-right-radius: 0;
+}
+
+.message-received {
+    align-self: flex-start; /* 받은 메시지를 왼쪽에 정렬 */
+    color: #333;
+    text-align: left;
+    background-color: #b2e9d1f;
+    margin-left: 15px;
+    border-top-left-radius: 0;
+}
+
+.message-sent:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid #fee79d;
+    border-left: 0px solid transparent;
+}
+
+.message-received:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid #b2e9d1;
+    border-right: 0px solid transparent;
+}
+
+.title {
+    text-align: center;
+    margin-top: -10px;
+  }
+
+#participants {
+    padding: 10px;
+    background-color: transparent; /* 배경색 투명 */
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 600px;
+    margin: auto;
+
+}
+
+.participant {
+    display: inline-block;
+    padding: 5px;
+    background-color: transparent; /* 배경색 투명 */
+    border: 0.5px solid gray; /* 테두리 색상과 두께 설정 */
+    color: rgb(0, 0, 0);
+    border-radius: 9px;
+    font-size: 14px;
+    white-space: nowrap;
+    width:100%;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin:auto;
+}
