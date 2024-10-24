@@ -89,6 +89,12 @@ public class BoardController {
     	return url; 
 	}
 
+	@GetMapping("/")
+	public String index (){
+
+		return "index";
+	}
+
 	//리스트모드 전체 리스트 조회 페이징처리
 	@GetMapping("/list")
 	public String list(Model model, 
@@ -108,6 +114,9 @@ public class BoardController {
 	    
 	    return "scheduleBoard/list";
 	}
+
+
+
     
 	//글등록폼요청
 	@GetMapping("/insert")
