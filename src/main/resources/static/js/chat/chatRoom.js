@@ -45,11 +45,23 @@
             }
 
                     // WebSocket 연결 설정
-                    var socket = new SockJS(`http://localhost:8085/ws/chat?roomId=${roomId}`);
-                    //var socket = new SockJS(`http://아이피주소:8085/ws/chat?roomId=${roomId}`);
+                    //var socket = new SockJS(`http://localhost:8085/ws/chat?roomId=${roomId}`);
 
-                    var stompClient = Stomp.over(socket);
+                    async function connectToSocket(roomId) {
+                        try {
+                            // API 호출하여 socketUrl 가져오기
+                            const response = await fetch('/api/socket-url');
+                            const socketUrl = `${await response.text()}?roomId=${roomId}`;
 
+                            // SockJS 연결 생성
+                            var socket = new SockJS(socketUrl);
+                            var stompClient = Stomp.over(socket);
+
+                            // 연결에 대한 추가 로직...
+                        } catch (error) {
+                            console.error('Error connecting to socket:', error);
+                        }
+                    }
 
                     stompClient.connect({roomId: roomId}, function (frame) {
                         console.log('Connected: ' + frame);

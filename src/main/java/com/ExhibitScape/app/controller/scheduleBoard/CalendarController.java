@@ -22,28 +22,21 @@ public class CalendarController {
 
 	@Autowired
 	private ScheduleBoardService boardService;
-	
     @GetMapping("/allCalendar")
     @ResponseBody
     public List<ScheduleBoardList> list() {
-    	System.out.println("calendar controller 들어옴");
-        List<ScheduleBoardList> DBlist = boardService.calendarList();
-        return DBlist;
+        return boardService.calendarList();
     }
     
     @GetMapping("/calendarDate")
     public List<ScheduleBoardList> getEvents(@RequestParam("start_date") LocalDate start_date, @RequestParam("end_date") LocalDate end_date) {
-    	
-        List<ScheduleBoardList> events = boardService.findAllBystart_dateBetween(start_date, end_date);
-        return events;
+        return boardService.findAllBystart_dateBetween(start_date, end_date);
     }
     
     @GetMapping("/calendarSearch")
     public List<ScheduleBoardList> getCalendarSearch(@RequestParam("keyword") String keyword) {
     	boardService.updateSearchCount(keyword);
-    	System.out.println("캘린더 검색 키워드 : " + keyword);
     	Specification<ScheduleBoardList> spec = ScheduleBoardListSpecification.titleOrContentContains(keyword);
-        List<ScheduleBoardList> events = boardService.findAll(spec);
-        return events;
+        return boardService.findAll(spec);
     }
 }

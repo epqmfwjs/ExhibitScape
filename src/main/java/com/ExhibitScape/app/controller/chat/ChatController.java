@@ -45,13 +45,6 @@ public class ChatController {
 
 	@MessageMapping("/chat.sendMessage")
 	public void sendMessage(ChatMessage chatMessage) {
-		System.out.println("샌드들어옴");
-		System.out.println("chatRoomNo : " + chatMessage.getMessageNo());
-		 //채팅방 번호를 사용하여 채팅방 엔티티 찾기
-//		ChatRoom chatRoom = chatRoomRepository.findById(chatMessage.getMessageNo())
-//				.orElseThrow(() -> new RuntimeException("채팅방을 찾을 수 없습니다."));
-		// 찾은 채팅방 엔티티를 메시지의 채팅방으로 설정
-//		chatMessage.setChatRoom(chatRoom);
 		ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
 		System.out.println("savedMessage : " + chatMessage);
 		chatCache.addMessage(savedMessage);
@@ -81,8 +74,6 @@ public class ChatController {
 			model.addAttribute("roomName", chatRoom.getRoomName());
 			model.addAttribute("user", memberNickName);
 			model.addAttribute("roomId", roomId);
-//			String strRoomId = String.valueOf(roomId);
-//			chatRoomService.addParticipant(strRoomId,memberNickName);
 			return "chat/room";
 		}
 		return "redirect:/login";

@@ -35,7 +35,6 @@ public class CommentController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String memberId = userDetails.getUsername();
-        System.out.println("memberId : " + memberId);
 
         commentService.writeComment(commentRequestDTO, no, memberId);
         return "redirect:/scheduleBoard/detail/" + no;
@@ -47,7 +46,6 @@ public class CommentController {
     public String updateComment(@PathVariable("no") Long no, @PathVariable("commentC_no") Long commentC_no, @RequestBody CommentRequestDTO commentRequestDTO,Authentication authentication) {
     	UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     	String memberId = userDetails.getUsername();
-    	System.out.println("수정요청 댓글내용 : "+commentRequestDTO.getContent());
     	commentService.updateComment(commentRequestDTO, commentC_no, memberId);
     	return "redirect:/scheduleBoard/detail/" + no;
     }
