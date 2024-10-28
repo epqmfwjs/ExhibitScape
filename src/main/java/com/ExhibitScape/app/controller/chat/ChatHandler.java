@@ -43,9 +43,7 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class ChatHandler extends TextWebSocketHandler {
-
     private static final List<WebSocketSession> sessions = new ArrayList<>();
-
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();

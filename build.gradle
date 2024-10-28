@@ -63,6 +63,9 @@ dependencies {
     
     //박현아 email 
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//아이피 보호를위한
+	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 }
 
 tasks.named('test') {

@@ -115,9 +115,6 @@ public class BoardController {
 	    return "scheduleBoard/list";
 	}
 
-
-
-    
 	//글등록폼요청
 	@GetMapping("/insert")
 	public String insert() {
