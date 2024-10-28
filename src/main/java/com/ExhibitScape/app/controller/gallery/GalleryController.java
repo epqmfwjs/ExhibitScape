@@ -49,32 +49,6 @@ public class GalleryController {
 		return "redirect:/gallery/";
 	}
 	
-//	@GetMapping("/")
-//	public String findAll(@RequestParam(value = "page", defaultValue = "1") int page,
-//	                      @RequestParam(value = "searchOption", required = false) String searchOption,
-//	                      @RequestParam(value = "searchWord", required = false) String searchWord,
-//	                      Model model) {
-//	    Pageable pageable = PageRequest.of(page - 1, 8, Sort.by("galId").descending());
-//	    Page<GalleryDTO> galleryPage;
-//
-//	    if (searchOption != null && searchWord != null) {
-//	        // 검색 기능 수행
-//	        galleryPage = galleryService.search(searchOption, searchWord, pageable);
-//	    } else {
-//	        // 전체 갤러리 목록
-//	        galleryPage = galleryService.findAll(pageable);
-//	    }
-//
-//	    model.addAttribute("galleryList", galleryPage.getContent());
-//	    model.addAttribute("currentPage", page);
-//	    model.addAttribute("totalPages", galleryPage.getTotalPages());
-//	    model.addAttribute("startPage", Math.max(1, page - 2));
-//	    model.addAttribute("endPage", Math.min(galleryPage.getTotalPages(), page + 2));
-//
-//	    return "gallery/list";
-//	}
-	
-
 	@GetMapping("/")
 	public String findAll(@RequestParam(value = "page", defaultValue = "1") int page,
 	                      @RequestParam(value = "searchOption", required = false) String searchOption,
@@ -173,24 +147,4 @@ public class GalleryController {
 	    model.addAttribute("galleryList", galleryList);
 	    return "gallery/list :: #galleryContainer"; // 갤러리 목록 부분만 렌더링
 	}
-	
-//	@GetMapping("/searchByDateRange")
-//	public String searchByDateRange(@RequestParam(value = "page", defaultValue = "1") int page,
-//	                                @RequestParam("startDateRange") String startDateRange,
-//	                                @RequestParam("endDateRange") String endDateRange,
-//	                                Model model) {
-//	    Pageable pageable = PageRequest.of(page - 1, 8, Sort.by("galId").descending());
-//	    Page<GalleryDTO> galleryPage = galleryService.searchByDateRange(startDateRange, endDateRange, pageable);
-//
-//	    model.addAttribute("galleryList", galleryPage.getContent());
-//	    model.addAttribute("currentPage", page);
-//	    model.addAttribute("totalPages", galleryPage.getTotalPages());
-//	    model.addAttribute("startPage", Math.max(1, page - 2));
-//	    model.addAttribute("endPage", Math.min(galleryPage.getTotalPages(), page + 2));
-//	    model.addAttribute("searchOption", null);
-//	    model.addAttribute("searchWord", null);
-//
-//	    return "gallery/list";
-//	}
-	
 }
