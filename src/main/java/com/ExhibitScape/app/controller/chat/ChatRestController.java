@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ExhibitScape.app.config.community.Appconfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,13 @@ public class ChatRestController {
     @Autowired
     private ChatRoomService chatRoomService;
 
-    @Value("${SOCKET_URL}")
-    private String socketUrl;
+    // 아이피 노출방지 .env 사용
+    @GetMapping("/api/socket-url")
+    public String getSocketUrl() {
+        Appconfig appconfig = new Appconfig();
+        String socketUrl = appconfig.socketUrl();
+        return socketUrl;
+    }
     
     // 특정 방의 참여자 목록 조회
     @GetMapping("/chat/participants")
@@ -48,11 +54,7 @@ public class ChatRestController {
         return ResponseEntity.ok().body("참가자 삭제 성공");
     }
 
-    // 아이피 암호화 .env 사용
-    @GetMapping("/api/socket-url")
-    public String getSocketUrl() {
-        return socketUrl;
-    }
+
 
 
 }

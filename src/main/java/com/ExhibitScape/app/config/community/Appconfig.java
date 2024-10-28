@@ -7,6 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class Appconfig implements WebMvcConfigurer{
+
+	// 아이피 노출방지를 위해 .env 파일 사용
+	private final Dotenv dotenv = Dotenv.configure().load();  // .env 파일 로드
+
+	@Bean
+	public String socketUrl() {
+		return dotenv.get("SOCKET_URL");
+	}
 	
 /*	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -21,12 +29,6 @@ public class Appconfig implements WebMvcConfigurer{
 			.addResourceLocations("file:///Img/upload/");
 	}
 
-	// 아이피 노출방지를 위해 .env 파일 사용
-	private final Dotenv dotenv = Dotenv.configure().load();  // .env 파일 로드
 
-	@Bean
-	public String socketUrl() {
-		return dotenv.get("SOCKET_URL");
-	}
 
 }
