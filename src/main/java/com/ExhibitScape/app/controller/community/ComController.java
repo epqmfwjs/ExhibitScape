@@ -86,7 +86,7 @@ public class ComController {
 	        redirectAttributes.addFlashAttribute("errorMessage", "로그인을 하셔야 글쓰기를 할 수 있습니다.");
 	        return "redirect:/exhibitscape/community/communityList"; // 로그인 페이지로 리다이렉트
 	    }
-		return "/community/communityWriteView";
+		return "community/communityWriteView";
 	}
 	
 	//글쓰기
@@ -190,7 +190,7 @@ public class ComController {
 	    
 	    model.addAttribute("likedCommunity", likedCommunity);
 	    model.addAttribute("pageCommunity", pageCommunity);
-		return "/community/comListView";
+		return "community/comListView";
 	}
 	
 	
@@ -209,7 +209,7 @@ public class ComController {
 	    }
 	    
 	    model.addAttribute("pageCommunity", pageCommunity);
-		return "/community/comListView";
+		return "community/comListView";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -225,7 +225,7 @@ public class ComController {
 		}
 		model.addAttribute("comDTO", comDTO);
 		//4.view
-		return "/community/communityReWriteView";
+		return "community/communityReWriteView";
 	}
 	
 	

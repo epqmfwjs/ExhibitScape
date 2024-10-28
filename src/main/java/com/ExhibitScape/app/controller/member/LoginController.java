@@ -9,7 +9,7 @@ public class LoginController {
 	@GetMapping("/login")
 	public String loginP() {
 		
-		return "/member/login";
+		return "member/login";
 	}
 	
 }
