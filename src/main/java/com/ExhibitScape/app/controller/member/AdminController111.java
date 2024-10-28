@@ -9,6 +9,6 @@ public class AdminController111 {
 	@GetMapping("/admin")
 	public String adminP() {
 		
-		return "/member/admin";
+		return "member/admin";
 	}
 }

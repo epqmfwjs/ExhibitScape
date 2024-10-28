@@ -43,7 +43,7 @@ public class AdminController {
 	public String findAll(Model model) {
 		List<MemberDTO> memberDTOList = memberService.findAll();
 		model.addAttribute("memberList", memberDTOList);
-		return "/admin/list";
+		return "admin/list";
 	}
 	
     
@@ -52,14 +52,14 @@ public class AdminController {
     public String updateForm(@PathVariable("memberNo") Integer memberNo, Model model) {
         MemberDTO memberDTO = memberService.findById(memberNo);
         model.addAttribute("updateMember", memberDTO);
-        return "/admin/update";
+        return "admin/update";
     }
 	
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute MemberDTO memberDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/admin/update";
+            return "admin/update";
         }
         memberService.update(memberDTO);
         return "redirect:/admin/list"; // 업데이트 후 리스트 페이지로 이동하도록 수정
