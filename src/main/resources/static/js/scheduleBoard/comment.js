@@ -1,17 +1,13 @@
 
 //댓글 수정 비동기반영 로직 
 function editComment(button) {
-    // HTML에있는 no가 js 에서 정의되있지 않기때문에 data-no속성에서 게시물 번호를 가져와 변수에 저장해서사용
-    //밑에 commentC_no 도 같은 원리로 변수에 저장해서 사용
     const no = button.getAttribute('data-no');
     const commentC_no = button.getAttribute('data-comment-no');
-    // 댓글 번호를 사용하여 해당 댓글의 HTML 요소를 가져옴
-    // 예)댓글 번호가 1이면 'comment-1'의 ID를 가진 내용을 가져옴
+
     const commentElement = document.getElementById('comment-' + commentC_no);
-    // 현재 댓글내용을 가져와 변수에 저장해놈
+
     const commentContent = commentElement.textContent;
-    // prompt 함수를 사용하여 수정할 댓글 내용을 입력받기
-    // 이때, 기본값으로 현재 댓글 내용을 제공(commentContent에 담긴내용이 현재 댓글 내용임)
+
     const newContent = prompt('수정하실 내용을 입력해 주세요.:', commentContent);
     
     // newContent가 비어있지 않은 경우

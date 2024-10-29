@@ -53,16 +53,18 @@ body{
 
 .input-area button {
     padding: 10px 20px;
-    background-color: rgb(19, 216, 3);
+    background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 14px;
     cursor: pointer;
+    border: 1px solid #ccc;
 }
 
 .input-area button:hover {
-    background-color: rgb(0, 255, 0);
+    background-color: rgb(237, 237, 237);
+    font-size: 16px;
 }
 
 .leave {
@@ -188,4 +190,49 @@ body{
     width:100%;
     text-align: center; /* 텍스트 중앙 정렬 */
     margin:auto;
+}
+
+.send {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* 단일 컬럼으로 변경 */
+        padding: 20px;
+        height: auto; /* 높이 자동 조절 */
+    }
+
+    .left-area, .right-area {
+        height: 500px; /* 높이 자동 조절 */
+        overflow-y: auto; /* 스크롤 가능하게 설정 */
+        margin-bottom: 20px;
+    }
+
+    .input-area input[type="text"] {
+        padding: 10px; /* 패딩 조절 */
+        font-size: 12px; /* 폰트 크기 조절 */
+    }
+
+    .leave {
+        max-width: 100%; /* 너비 100%로 조정 */
+    }
+
+    #participants {
+        max-width: 100%; /* 최대 너비 100%로 변경 */
+        gap: 5px; /* 간격 축소 */
+    }
+
+    .participant {
+        font-size: 12px; /* 폰트 크기 조절 */
+    }
+
+    .message {
+        max-width: 90%; /* 메시지의 최대 너비 축소 */
+        font-size: 13px; /* 폰트 크기 조절 */
+    }
+
+    .send {
+        display: block;
+    }
 }

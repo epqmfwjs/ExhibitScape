@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showMessage(message) {
+
         const messageElement = document.createElement('div');
         const now = new Date();
         const strTime = `${now.getHours() % 12 || 12}:${now.getMinutes().toString().padStart(2, '0')} ${now.getHours() >= 12 ? '오후' : '오전'}`;
@@ -97,7 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const chatContainer = document.getElementById('chat-container');
         chatContainer.appendChild(messageElement);
-        chatContainer.scrollTop = chatContainer.scrollHeight; // 스크롤을 최신 메시지 위치로 이동
+        const leftArea = document.querySelector('.left-area');
+        leftArea.scrollTop = leftArea.scrollHeight; //  스크롤 최하단으로 이동
 
         loadAndShowParticipants();
     }

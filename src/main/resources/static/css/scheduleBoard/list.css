@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-	
+
 body {
     font-family: "Noto Sans KR", sans-serif;
   	font-optical-sizing: auto;
@@ -37,7 +37,7 @@ body {
 .keywordSearch h3 {
     margin: 0;
     border-bottom: 1px solid #555;
-    
+
 }
 
 .keywordSearch .search-bar {
@@ -154,7 +154,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s ease; /* 호버 시 서서히 나타나는 효과 */
 }
- 
+
 .event-card:hover .card-image {
     opacity: 1;
 }
@@ -294,7 +294,7 @@ input[type="button"]:hover {
 #calendarBox{
     width: 70%;
     padding-left: 22%;
-    
+
 }
 /* 일요일 날짜 빨간색 */
 .fc-day-sun a {
