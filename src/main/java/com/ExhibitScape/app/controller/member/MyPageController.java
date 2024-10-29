@@ -26,7 +26,7 @@ public class MyPageController {
     public String myPage(@AuthenticationPrincipal MemberDetails memberDetails, Model model) {
         if (memberDetails != null) {
             model.addAttribute("member", myPageService.getMemberInfo(memberDetails.getUsername()));
-            return "/member/myPage";
+            return "member/myPage";
         } else {
             return "redirect:/login?error";
         }
