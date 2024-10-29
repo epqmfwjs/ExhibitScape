@@ -10,6 +10,7 @@ body {
     height: 100vh;
     margin: 0;
 }
+
 .logo {
     margin-bottom: 30px;
 }
@@ -24,7 +25,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 40px;
-    width: 300px;
+    width: 300px; /* 기본 너비 */
     text-align: center;
 }
 
@@ -110,3 +111,4 @@ input[type="submit"]:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
