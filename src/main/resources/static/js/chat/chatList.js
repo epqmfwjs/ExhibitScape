@@ -11,13 +11,13 @@ window.onload = function() {
         //window.location.reload();
     }
 }
-// 모달 가져오기
+
 var modal = document.getElementById("myModal");
 
-// 모달을 여는 버튼
+
 var btn = document.getElementById("myBtn");
 
-// 모달을 닫는 <span> 요소 (x 버튼)
+
 var span = document.getElementsByClassName("close")[0];
 
 btn.onclick = function() {
@@ -28,7 +28,6 @@ span.onclick = function() {
     modal.style.display = "none";
 }
 
-// 사용자가 모달 외부를 클릭하면 모달 닫기
 window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";

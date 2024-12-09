@@ -3,7 +3,6 @@ package com.ExhibitScape.app.controller.chat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -51,16 +50,6 @@ public class ChatController {
 		messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getMessageNo(), savedMessage);
 
 	}
-
-	////// 기존메시지로딩 테스트
-	@GetMapping("/chat/messages")
-	public ResponseEntity<List<ChatMessage>> getChatMessages(@RequestParam("chatRoomNo") Long chatRoomNo) {
-		System.out.println("조회들어옴: " + chatRoomNo);
-
-		return null;// ResponseEntity.ok(messages);
-	}
-
-
 	@GetMapping("/chat")
 	public String chat(@RequestParam("roomId") long roomId, Model model, Authentication authentication) {
 		String memberNickName = null;
