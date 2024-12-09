@@ -13,7 +13,7 @@ public class Appconfig implements WebMvcConfigurer{
 
 	@Bean
 	public String socketUrl() {
-		return dotenv.get("SOCKET_URL");
+		return dotenv.get("EXHIBITSCAPE_SOCKET_URL");
 	}
 	
 /*	@Override
